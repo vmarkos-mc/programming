@@ -1,8 +1,0 @@
-\frametitle{Importing Scripts}
-In order to inform Python that the executable part of a script should not be executed when importing this we can use the following:
-^^I^^I\begin{lstlisting}[language=Python]
-<non executable code>
-if __name__ == "__main__":
-    <executable code>
-\end{lstlisting}
-^^I^^IUnder the \texttt{if} statement we put any code we want to be executed whenever the script is directly called while outside it we put any ``importable'' code, e.g., function declarations.
