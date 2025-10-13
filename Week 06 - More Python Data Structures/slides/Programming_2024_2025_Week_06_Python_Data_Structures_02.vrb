@@ -1,0 +1,13 @@
+\frametitle{Key Set Operations}
+Expected output:
+^^I^^I\begin{lstlisting}
+{1, 4}
+{1, 3, 4, 6, 7, 9}
+{3, 6}
+{3, 6, 7, 9}
+\end{lstlisting}
+^^I^^I\begin{itemize}
+^^I^^I^^I\item Python sets support all common maths set operations, such as intersection, union, etc.
+^^I^^I^^I\item All such functions are called from a certain set and \textbf{return a new set}.
+^^I^^I^^I\item There are also \texttt{\_update()} variants that update the calling set in place.
+^^I^^I\end{itemize}

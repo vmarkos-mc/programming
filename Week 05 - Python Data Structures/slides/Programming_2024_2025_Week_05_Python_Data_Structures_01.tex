@@ -1,0 +1,562 @@
+% !TeX TS-program = xelatex
+\documentclass[aspectratio=169, 12pt, xcolor=table]{beamer}
+\usefonttheme{professionalfonts}
+\usefonttheme{serif}
+\usepackage[T1]{fontenc}
+\usepackage{fontspec-xetex}
+
+\usepackage{tikz}
+
+\usepackage{booktabs}
+\usepackage{ifthen}
+\usepackage{listings}
+\usepackage{subcaption}
+
+\usetikzlibrary{shapes.geometric, arrows}
+
+\setmainfont{Lato}
+
+%\PassOptionsToPackage[more=table]{xcolor}
+
+% Local configuration
+\renewcommand{\figurename}{}
+\DeclareCaptionFormat{custom}
+{%
+	\tiny #3
+}
+\captionsetup{format=custom}
+
+% Title stuff
+\title{Programming}
+\subtitle{Python Data Structures}
+\date{Week 05}
+\author{Vassilis Markos, Mediterranean College}
+
+\usetheme{streamline}
+
+% Local Commands
+\newcommand{\ohref}[1]{\href{#1}{\texttt{#1}}}
+\newcommand{\listindex}[2]{{\underset{#1}{\small #2}}}
+
+% Code listings
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% Tikz style
+
+\tikzstyle{startstop} = [ellipse, rounded corners, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{process} = [rectangle, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{decision} = [diamond, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\tikzstyle{simple node} = [rectangle, draw=black, minimum width = 0.8cm, minimum height = 0.6cm]
+
+% makeatletter stuff
+
+\makeatletter
+\newcommand{\arabicthree}[1]{\expandafter\@arabicthree\csname c@#1\endcsname}
+\newcommand{\@arabicthree}[1]{\ifnum #1<100 0\fi\ifnum #1<10 0\fi\number#1}
+\makeatother
+
+\newcounter{exno}
+\setcounter{exno}{0}
+
+\newcommand{\exno}{\stepcounter{exno}In--class Exercise \#\arabicthree{exno}}
+
+\begin{document}
+
+	\begin{frame}
+		\titlepage
+	\end{frame}
+
+	\begin{frame}{Contents}
+		\tableofcontents
+	\end{frame}
+
+%	\section{A Brief Intro}\label{sec:a-brief-intro}
+%	
+%	\sectionframe
+%	
+%	\begin{headsup}{Desperate Times, Desperate Measures}
+%		\begin{minipage}[t]{0.40\textwidth}
+%			\vspace{0pt}
+%			Since we are transitioning on a new platform, things are still a bit quirky. So, to make sure we keep track of who is here and who is not, please \textbf{scan the QR code shown next} or \textbf{click the link below it} and fill in this form with your information (confidential).
+%		\end{minipage}\hfill
+%		\begin{minipage}[t]{0.58\textwidth}
+%			\vspace{0pt}
+%			\raggedleft
+%			\includegraphics[scale=0.35]{../../assets/attendance_form.png}
+%			\centering
+%			\ohref{https://forms.gle/4yiYhonrjuVs4sCv6}
+%		\end{minipage}
+%	\end{headsup}
+%
+%	\begin{headsup}{Desperate Times, Desperate Measures}
+%		\begin{minipage}[t]{0.50\textwidth}
+%			\vspace{0pt}
+%			For similar reasons, we will also be using a public shared drive folder to keep our materials as long as our platform is a bit unstable. To visit the platform and download this lecture's materials please use the QR shown right or the link below.
+%		\end{minipage}\hfill
+%		\begin{minipage}[t]{0.48\textwidth}
+%			\vspace{0pt}
+%			\raggedleft
+%			\includegraphics[scale=0.25]{../../assets/shared_folder.png}
+%			\centering
+%		\end{minipage}
+%		\vfill
+%		\ohref{https://shorturl.at/FVszq}
+%		\begin{scriptsize}
+%			\ohref{https://drive.google.com/drive/folders/1cUY\_XNJLyGNHRRgfJbxXemf8AFgiMnaF?usp=sharing}
+%		\end{scriptsize}
+%	\end{headsup}
+
+	\section{Last Time's Exercises}\label{sec:last-time-s-exercises}
+	
+	\sectionframe
+	
+	\setcounter{exno}{0}
+	
+	\begin{frame}{\exno}
+		Write a Python function that:
+		\begin{itemize}
+			\item takes a single integer as an argument, and;
+			\item returns \texttt{True} or \texttt{False} depending on whether this number is even or odd.
+		\end{itemize}
+		Demonstrate the functionality of your function by properly using it in a simple Python script.
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		The Fibonacci numbers, $f_n$, are a sequence of integer numbers given by the following relation:
+		\[f_n=f_{n-1}+f_{n-2},\quad f_0=0,\ f_1=1.\]
+		That is, each term is the sum of its previous two. For instance, the first 10 Fibonacci numbers are:
+		\[0,1,1,2,3,5,8,13,21,34.\]
+		Write a Python function that takes $n$ as input and prints the $n$--th Fioinacci number, $f_n$.
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		Write a Python program that:
+		\begin{itemize}
+			\item asks the user for consecutive positive integers (non--positive input terminates number insertion), and;
+			\item computes and prints their sum and average.
+		\end{itemize}
+		You are required to use \textbf{at least three different functions} for your solution and explain your rationale!
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		The standard deviation, $s$, of a set of $n$ numbers $x_1,x_2,\ldots,x_n$ is compute by the following formula:
+		\[s=\sqrt{\frac{(x_1-\mu)^2+(x_2-\mu)^2+\cdots+(x_n-\mu)^2}{n}},\]
+		where $\mu$ is the mean value of those numbers.
+		
+		Write a Python program that asks the user for some non--zero numbers (insertion terminated by inserting 0) and computes their standard deviation. Make sure your program uses \textbf{at least two functions!}
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		A string is said to be a \textbf{palindrome} if it reads the same left--to--right and right--to--left. Write a Python function that:
+		\begin{itemize}
+			\item takes a single string as an argument, and;
+			\item returns \texttt{True} or \texttt{False} depending on whether this string is a palindrome.
+		\end{itemize}
+		Demonstrate the functionality of your function by properly using it in a simple Python script.
+		
+		\textit{Hint: In order to access the \texttt{i}--th character of a string named \texttt{s} you can use the syntax \texttt{s[i]}.}
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		One way to estimate the square root of a positive float, $a$, is to use the following method:
+		\[x_n=\frac{1}{2}\left(x_{n-1}+\frac{a}{x_{n-1}}\right),\]
+		where the first estimate, $x_0$, is an arbitrary positive float. We say that $x_n$ is an estimation of $\sqrt{a}$ of accuracy $\varepsilon>0$ if $\left\lVert x_n-x_{n-1}\right\rVert<\varepsilon$, i.e., if the two latest estimates we have made are no further apart than $\varepsilon$.
+		
+		Write a Python function that takes $x_0$, $a$, and $\varepsilon$ as arguments and returns the corresponding estimate, $x_n$.
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		The Towers of the Hanoi is a well--known puzzle where you have to move disks of different sizes one at a time from a peg to another peg with the help of an auxiliary peg and without ever moving a larger disk on top of a smaller one. You can familiarise yourselves with the game below:
+		\begin{center}
+			\ohref{https://www.mathsisfun.com/games/towerofhanoi.html}
+		\end{center}
+		Develop a Python function that accepts a positive integer $n$ corresponding to the number of disks on the first peg and prints on screen the required steps to solve the problem.
+	\end{frame}
+
+	\section{Python Data Structures}\label{sec:python-data-structures}
+	
+	\sectionframe
+	
+	\begin{frame}{Looking For Numbers}
+		Write a Python script that:
+		\begin{itemize}
+			\item asks the user for three integers, let $a$, $b$, $c$;
+			\item then asks the user for a fourth integer and checks if it is one of the first three provided before and prints a relevant message on screen
+		\end{itemize}
+		How did you keep track of the first three provided numbers?
+	\end{frame}
+
+	\begin{frame}{A Possible Solution}
+		\lstinputlisting[language=Python]{../source/search_001.py}
+	\end{frame}
+
+	\begin{frame}{Looking For Numbers}
+		Write a Python script that:
+		\begin{itemize}
+			\item asks the user for as many positive integers as they wish to provide (number insertion stops with the user entering a non--positive number);
+			\item then asks the user for another integer and checks if it is one of the rest ones provided before and prints a relevant message on screen
+		\end{itemize}
+		How did you keep track of the first three provided numbers?
+	\end{frame}
+
+	\begin{frame}{A Possible Solution}
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/search_002.py}
+	\end{frame}
+
+	\begin{frame}{Python Lists}
+		In the above solution we used on of Python's best--selling data structures: a \textbf{list:}
+		\begin{itemize}
+			\item Lists can be thought off as a collection of items in a single place.
+			\item The above is not accurate in terms of memory allocation, but it is a very good mental model for Python's lists.
+			\item We can initialise an empty list as in line 10, by using \texttt{[]}.
+			\item We can add elements to a list by using \texttt{.append()}.
+			\item We can get the length of a list by using \texttt{len()}.
+			\item We can access the \texttt{i}--th element of list \texttt{a} (0 indexed) by \texttt{a[i]}.
+		\end{itemize}
+	\end{frame}
+
+	\begin{headsup}{Indexing}
+		\begin{itemize}
+			\item Suppose you have a few apples in front of you. How would you count them?\pause
+			\begin{itemize}
+				\item 1, 2, 3,\ldots\pause
+			\end{itemize}
+			\item When it comes to lists and indexing in general, things do not work that way for most programming languages, Python included.\pause
+			\item For instance, the elements of a list like \texttt{a=[3, 6, 2, 5]} are indexed as follows:
+			\[a = [\listindex{0}{3},\listindex{1}{6},\listindex{2}{2}, \listindex{3}{5}]\]
+			\item So, the first element is at position 0, the second at position 1, etc.\pause
+			\item So, the last element is at position\ldots?\pause
+			\begin{itemize}
+				\item \texttt{len(a) - 1}. Be careful about that!
+			\end{itemize}
+		\end{itemize}
+	\end{headsup}
+
+	\begin{headsup}{Negative Indexing}
+		What do you expect the following to print?
+		\lstinputlisting[language=Python]{../source/indexing_001.py}\pause
+		\begin{itemize}
+			\item Python allows negative indexing, interpreted as follows:
+			\begin{center}
+				\ttfamily a[-n] = a[len(a) - n]
+			\end{center}\pause
+			\item So, \textbf{negative indices} count starting from the \textbf{end of the list!}
+		\end{itemize}
+	\end{headsup}
+
+	\begin{frame}{Looping Over A List}
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/search_003.py}
+	\end{frame}
+	
+	\begin{frame}{List Membership}
+		We can check list membership directly, using the \texttt{in} keyword:
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/search_004.py}
+	\end{frame}
+
+	\begin{frame}{Popping From A List}
+		What do you expect the following to print?
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/operations_001.py}\pause
+		\begin{itemize}
+			\item It prints the elements of the list in reverse order.\pause
+			\item So, what does \texttt{.pop()} do?
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Popping From A List}
+		\begin{itemize}
+			\item \texttt{.pop()} can actually pop any element from a Python list and not just the last one.
+			\item To achieve that, just call it using the corresponding index.
+			\begin{itemize}
+				\item For instance, to pop the first element of a list one should write\ldots\pause
+				\item \texttt{.pop(0)}.
+				\item For instance, to pop the third element of a list one should write\ldots\pause
+				\item \texttt{.pop(2)}.
+				\item For instance, to pop the 25\textsuperscript{th} element of a list one should write\ldots\pause
+				\item \texttt{.pop(24)}.
+			\end{itemize}
+			\item \texttt{.pop()} throws an index error if asked to pop an element out of range.
+		\end{itemize}		
+	\end{frame}
+
+	\begin{frame}{Popping Stuff Costs\ldots}
+		The following script times \texttt{.pop()} performance when popping from various places in a list. What do you expect it to print?
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/operations_002.py}
+	\end{frame}
+
+	\begin{frame}[fragile]{Popping Costs}
+		A typical output might look like the following:
+		\begin{lstlisting}
+last:   0.004077139998116763
+first:  0.8199967760010622
+middle: 0.347551475999353
+\end{lstlisting}
+		\begin{itemize}
+			\item Why do you think is that?
+			\item Roughly, because \texttt{.pop()} has to push all elements on the right of the popped element one position left, which increases as we approach the list start.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{\texttt{.insert()}}
+		What do you expect this to print?
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/operations_003.py}
+	\end{frame}
+
+	\begin{frame}{\texttt{.insert()}}
+		Python's \texttt{.insert()} allows insert elements at an arbitrary position in a list.
+		\begin{itemize}
+			\item Inserting at the end of the list, costs roughly as for \texttt{.append()}.\pause
+			\item Not the same, though, so, if you always insert at the end, prefer \texttt{.append()}.\pause
+			\item Why does it cost that more to insert in the beginning of the list?\pause
+			\item Because, as with \texttt{.pop()}, we have to push all subsequent elements one position to the right!\pause
+			\item So, design your algorithms to avoid inserting that much to the beginning of a list!
+		\end{itemize}
+	\end{frame}
+
+	\begin{irrelevant}{Lists In A Nutshell}
+		A simply linked list looks much like what follows in memory:
+		\begin{center}
+			\begin{tikzpicture}
+				\node[simple node] (a) at (0,0) {\texttt{a}};
+				\node[simple node] (b) at (2,0) {\texttt{b}};
+				\node (dots) at (4,0) {$\cdots$};
+				\node[simple node] (z) at (6,0) {\texttt{z}};
+%				Arrows
+				\draw[thick, ->] (a) -- (b);
+				\draw[thick, ->] (b) -- (dots);
+				\draw[thick, ->] (dots) -- (z);
+			\end{tikzpicture}
+		\end{center}\pause
+		\begin{itemize}
+			\item Each node points to its next one (there are some peculiarities regarding the first and last nodes but ignore them for now).\pause
+			\item So, how much time does it cost to find the last node?\pause
+			\begin{itemize}
+				\item It depends on the length of the list: the lengthier the list, the longer it takes to get to the last element.\pause
+			\end{itemize}
+			\item Any ideas to make navigation easier?
+		\end{itemize}
+	\end{irrelevant}
+
+	\begin{irrelevant}{Lists In A Nutshell}
+		A \textbf{doubly} linked list looks much like what follows in memory:
+		\begin{center}
+			\begin{tikzpicture}
+			\node[simple node] (a) at (0,0) {\texttt{a}};
+			\node[simple node] (b) at (2,0) {\texttt{b}};
+			\node (dots) at (4,0) {$\cdots$};
+			\node[simple node] (z) at (6,0) {\texttt{z}};
+			%				Arrows
+			\draw[thick, ->] (a.20) -- (b.160);
+			\draw[thick, ->] (b.200) -- (a.340);
+			\draw[thick, ->] (b.20) -- (dots.160);
+			\draw[thick, ->] (dots.200) -- (b.340);
+			\draw[thick, ->] (dots.20) -- (z.160);
+			\draw[thick, ->] (z.200) -- (dots.340);
+			\end{tikzpicture}
+		\end{center}\pause
+		\begin{itemize}
+			\item Here, each node points to both its next and previous ones (again, first and last nodes are treated separately).\pause
+			\item So, how much time does it cost to find the last node?\pause
+			\begin{itemize}
+				\item Roughly, half as before.
+			\end{itemize}
+		\end{itemize}
+	\end{irrelevant}
+
+	\begin{irrelevant}{Python Lists Are Not Lists!}
+		Even if named as lists, Python lists are actually (dynamically sized) arrays:
+		\begin{itemize}
+			\item That is, all elements are stored in consecutive memory locations.
+			\item Whenever the list gets (almost) full, it expands to accommodate more elements, if possible.
+			\item Whenever the list gets too empty, it shrinks to free memory.
+			\item So, accessing an element is actually faster than for a list, it just comes at the cost of occasionally resizing the list.
+		\end{itemize}
+	\end{irrelevant}
+
+	\begin{frame}{Python Tuples: Immutable Lists}
+		What does the following print?
+		\lstinputlisting[language=Python]{../source/tuples_001.py}
+	\end{frame}
+	
+	\begin{frame}[fragile]{Python Tuples: Immutable Lists}
+		Probably, you get something like the following:
+		\begin{lstlisting}
+(2, 3, 4)
+3
+Traceback (most recent call last):
+File "tuples_001.py", line 7, in <module>
+x[0] = 4
+TypeError: 'tuple' object does not support item assignment
+\end{lstlisting}\pause
+		\begin{itemize}
+			\item Python tuples are just like lists, but we cannot change any of their attributes, i.e.:
+			\begin{itemize}
+				\item their contents;
+				\item their length;
+			\end{itemize}
+			\item So we can just treat them as, roughly, constant (immutable) lists.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Names And Ages}
+		Write a Python script that:
+		\begin{itemize}
+			\item asks the user to provide as many times as they want to pairs of the form \texttt{("name", age)}, which correspond to the user's friends names and ages (data insertion terminates when an empty name is provided);
+			\item then asks the use to enter a certain name, and;
+			\item prints the age of the person on screen if the name has been previously entered, or prints an error message otherwise.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{A Solution Using Lists And Tuples}
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/tuples_002.py}
+	\end{frame}
+	
+	\begin{frame}{A Solution Using Python Dictionaries}
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/dictionaries_001.py}
+	\end{frame}
+
+	\begin{frame}[fragile]{Python Dictionaries}
+		Dictionaries are like mathematical functions, in the sense that they map keys to a \textbf{single value}, e.g.:
+		\begin{lstlisting}
+dict = {
+    key_1: value_1,
+    key_2: value_2,
+    ...
+    key_n: value_n
+}
+\end{lstlisting}
+		We can initialise a dictionary by directly providing its values in the above form.
+	\end{frame}
+
+	\begin{frame}{Dictionary Utililities}
+		\begin{itemize}
+			\item \texttt{.keys()} returns a Python iterable (not a list!) containing the dictionary's keys.
+			\item \texttt{.values()} returns a Python iterable (not a list!) containing the dictionary's values.
+			\item \texttt{.items()} returns a Python iterable (not a list!) containing the dictionary's keys and values as a tuple of 2.
+			\item For all the above, we can use typical list--like operations, but they above are not lists! If we want to use them as lists (not recommended) we can wrap them using \texttt{list()}.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Are Dictionaries Better?}
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/dictionaries_002.py}
+	\end{frame}
+
+	\begin{frame}[fragile]{Are Dictionaries Better?}
+		\begin{itemize}
+			\item As a rough idea, \texttt{a} is a dictionary, while \texttt{b} is a similar structure, represented as a list of tuples.\pause
+			\item Then, we time value retrieval based on random keys. A typical output should look like:
+			\begin{lstlisting}
+dict: 0.003898058996128384
+list: 0.8523417840042384
+\end{lstlisting}\pause
+			\item This is a chaotic difference! Why is that?\pause
+			\item You will learn more in your Data Structures module, so stay tuned\ldots
+		\end{itemize}
+	\end{frame}
+	
+	\section{Fun Time!}\label{sec:fun-time}
+	
+	\sectionframe
+	
+	\setcounter{exno}{0}
+	
+	\begin{frame}{\exno}
+		Using appropriate Python data structures write a Python script that:
+		\begin{itemize}
+			\item Asks the user to provide student names along their grade at the Programming module.
+			\item Stores the above in an appropriate data structure.
+			\item Asks the user to provide a student name and prints their grade.
+			\item The script should terminate when the user enters an empty student name.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{\exno}
+		Using appropriate Python data structures write a Python script that:
+		\begin{itemize}
+			\item asks the user to provide positive integers (number insertion is terminated when the user inserts a non--positive integer);
+			\item computes the sum of each integer's proper divisors;
+			\item then asks the user repeatedly for numbers and prints on screen the sum of its proper divisors;
+			\item the script should terminate when the user asks for the divisor sum of a non--positive integer.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{\exno}
+		Read the following Wikipedia lemma on the Sieve of Eratosthenes:
+		\begin{center}
+			\ohref{https://en.wikipedia.org/wiki/Sieve\_of\_Eratosthenes}
+		\end{center}
+		Then, using appropriate Python data structures, implement the sieve algorithm that computes all prime numbers up to a certain provided positive integer, \texttt{n}.
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		Since programming is not only about reading simple input from the user and returning a nicely computed output, but also about crafting some more complex projects, how about we build our own game?
+		
+		In today's materials, under the following link:
+		\begin{center}
+			\ohref{../labs/Programming\_Lab\_01.pdf}
+		\end{center}
+		you can find the first part of a Lab series for this course. Follow the instructions found therein to start working on it!
+	\end{frame}	
+	
+	\begin{frame}{\exno}
+		Start working on all Labs found in today's materials \texttt{homework} directory.
+		
+		To help me asses those files, you can name them as follows:
+		\begin{center}
+			\texttt{task\_xxx.py}
+		\end{center}
+		where \texttt{xxx} is the number of the task. For instance, task 5 file could be named \texttt{task\_005.py}.
+		
+		Submit your work via email at: \texttt{v.markos@mc-class.gr}
+	\end{frame}
+
+	\begin{frame}{Homework}
+		\begin{itemize}
+			\item In this week's materials, under the \texttt{homework} directory, you can find some Python programming Tasks. Complete as many of them as you can (preferably all).
+			\item This is important, since tasks such as those provided with this lecture's materials will most probably be part of your course assessment portfolio. So, take care to solve as many of those tasks as possible!
+			\item Share your work at: \texttt{v.markos@mc-class.gr}
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Any Questions?}
+		\begin{minipage}{0.35\textwidth}
+			\raggedright
+			Do not forget to fill in the questionnaire shown right!
+		\end{minipage}\hfill
+		\begin{minipage}{0.58\textwidth}
+			\vspace{0pt}
+			\raggedleft
+			\includegraphics[scale=0.4]{../../assets/post_lesson_assessment.png}
+			\centering
+			\ohref{https://forms.gle/dKSrmE1VRVWqxBGZA}
+		\end{minipage}
+	\end{frame}
+	
+\end{document}

@@ -1,0 +1,3 @@
+\beamer@sectionintoc {1}{Last Time's Exercises}{3}{0}{1}
+\beamer@sectionintoc {2}{Functions}{16}{0}{2}
+\beamer@sectionintoc {3}{Fun Time!}{53}{0}{3}

@@ -1,0 +1,13 @@
+\frametitle{Nested Loops}
+Nesting loops results to the inner loops being repeated so many times as the external loop dictates. For instance:
+^^I^^I\begin{lstlisting}[language={Python}]
+for i in range(10):
+    for j in range(20):
+        <stuff>
+\end{lstlisting}
+^^I^^Iwill repeat \texttt{<stuff>} $10\times 20 = 200$ times, since:
+^^I^^I\begin{itemize}
+^^I^^I^^I\item the inner loop repeats \texttt{<stuff>} 20 times, and;
+^^I^^I^^I\item the outer loop repeats the inner loop 10 times.
+^^I^^I\end{itemize}
+^^I^^ISo, it is important to remember that nesting loops leads to \textbf{multiplicatively longer} execution times!

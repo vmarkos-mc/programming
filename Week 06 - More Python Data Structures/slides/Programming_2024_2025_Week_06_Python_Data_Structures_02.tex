@@ -1,0 +1,373 @@
+% !TeX TS-program = xelatex
+\documentclass[aspectratio=169, 12pt, xcolor=table]{beamer}
+\usefonttheme{professionalfonts}
+\usefonttheme{serif}
+\usepackage[T1]{fontenc}
+\usepackage{fontspec-xetex}
+
+\usepackage{tikz}
+
+\usepackage{booktabs}
+\usepackage{ifthen}
+\usepackage{listings}
+\usepackage{subcaption}
+
+\usetikzlibrary{shapes.geometric, arrows}
+
+\setmainfont{Lato}
+
+%\PassOptionsToPackage[more=table]{xcolor}
+
+% Local configuration
+\renewcommand{\figurename}{}
+\DeclareCaptionFormat{custom}
+{%
+	\tiny #3
+}
+\captionsetup{format=custom}
+
+% Title stuff
+\title{Programming}
+\subtitle{More Python Data Structures}
+\date{Week 06}
+\author{Vassilis Markos, Mediterranean College}
+
+\usetheme{streamline}
+
+% Local Commands
+\newcommand{\ohref}[1]{\href{#1}{\texttt{#1}}}
+\newcommand{\listindex}[2]{{\underset{#1}{\small #2}}}
+
+% Code listings
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% Tikz style
+
+\tikzstyle{startstop} = [ellipse, rounded corners, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{process} = [rectangle, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{decision} = [diamond, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\tikzstyle{simple node} = [rectangle, draw=black, minimum width = 0.8cm, minimum height = 0.6cm]
+
+% makeatletter stuff
+
+\makeatletter
+\newcommand{\arabicthree}[1]{\expandafter\@arabicthree\csname c@#1\endcsname}
+\newcommand{\@arabicthree}[1]{\ifnum #1<100 0\fi\ifnum #1<10 0\fi\number#1}
+\makeatother
+
+\newcounter{exno}
+\setcounter{exno}{0}
+
+\newcommand{\exno}{\stepcounter{exno}In--class Exercise \#\arabicthree{exno}}
+
+\begin{document}
+
+	\begin{frame}
+		\titlepage
+	\end{frame}
+
+	\begin{frame}{Contents}
+		\tableofcontents
+	\end{frame}
+
+%	\section{A Brief Intro}\label{sec:a-brief-intro}
+%	
+%	\sectionframe
+%	
+%	\begin{headsup}{Desperate Times, Desperate Measures}
+%		\begin{minipage}[t]{0.40\textwidth}
+%			\vspace{0pt}
+%			Since we are transitioning on a new platform, things are still a bit quirky. So, to make sure we keep track of who is here and who is not, please \textbf{scan the QR code shown next} or \textbf{click the link below it} and fill in this form with your information (confidential).
+%		\end{minipage}\hfill
+%		\begin{minipage}[t]{0.58\textwidth}
+%			\vspace{0pt}
+%			\raggedleft
+%			\includegraphics[scale=0.35]{../../assets/attendance_form.png}
+%			\centering
+%			\ohref{https://forms.gle/4yiYhonrjuVs4sCv6}
+%		\end{minipage}
+%	\end{headsup}
+%
+%	\begin{headsup}{Desperate Times, Desperate Measures}
+%		\begin{minipage}[t]{0.50\textwidth}
+%			\vspace{0pt}
+%			For similar reasons, we will also be using a public shared drive folder to keep our materials as long as our platform is a bit unstable. To visit the platform and download this lecture's materials please use the QR shown right or the link below.
+%		\end{minipage}\hfill
+%		\begin{minipage}[t]{0.48\textwidth}
+%			\vspace{0pt}
+%			\raggedleft
+%			\includegraphics[scale=0.25]{../../assets/shared_folder.png}
+%			\centering
+%		\end{minipage}
+%		\vfill
+%		\ohref{https://shorturl.at/FVszq}
+%		\begin{scriptsize}
+%			\ohref{https://drive.google.com/drive/folders/1cUY\_XNJLyGNHRRgfJbxXemf8AFgiMnaF?usp=sharing}
+%		\end{scriptsize}
+%	\end{headsup}
+
+	\section{Last Time's Exercises}\label{sec:last-time-s-exercises}
+	
+	\sectionframe
+	
+	\setcounter{exno}{0}
+	
+	
+	\begin{frame}{\exno}
+		Using appropriate Python data structures write a Python script that:
+		\begin{itemize}
+			\item Asks the user to provide student names along their grade at the Programming module.
+			\item Stores the above in an appropriate data structure.
+			\item Asks the user to provide a student name and prints their grade.
+			\item The script should terminate when the user enters an empty student name.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		Using appropriate Python data structures write a Python script that:
+		\begin{itemize}
+			\item asks the user to provide positive integers (number insertion is terminated when the user inserts a non--positive integer);
+			\item computes the sum of each integer's proper divisors;
+			\item then asks the user repeatedly for numbers and prints on screen the sum of its proper divisors;
+			\item the script should terminate when the user asks for the divisor sum of a non--positive integer.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		Read the following Wikipedia lemma on the Sieve of Eratosthenes:
+		\begin{center}
+			\ohref{https://en.wikipedia.org/wiki/Sieve\_of\_Eratosthenes}
+		\end{center}
+		Then, using appropriate Python data structures, implement the sieve algorithm that computes all prime numbers up to a certain provided positive integer, \texttt{n}.
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		Since programming is not only about reading simple input from the user and returning a nicely computed output, but also about crafting some more complex projects, how about we build our own game?
+		
+		In today's materials, under the following link:
+		\begin{center}
+			\ohref{../labs/Programming\_Lab\_01.pdf}
+		\end{center}
+		you can find the first part of a Lab series for this course. Follow the instructions found therein to start working on it!
+	\end{frame}
+
+	\section{More Python Data Structures}\label{sec:more-python-data-structures}
+	
+	\sectionframe
+	
+	\begin{frame}{Unique Entries}
+		What is the functionality of the following script?
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\tiny]{../source/unique_001.py}
+	\end{frame}
+	
+	\begin{frame}{Unique Entries}
+		As you might have guessed, the previous script reads some user input and finds all unique entries. For instance:
+		\begin{itemize}
+			\item input: \texttt{[4, 5, 7, 1, 2]} $\rightarrow$ \texttt{[4, 5, 7, 1, 2]}.
+			\item input: \texttt{[4, 5, 7, 4, 5]} $\rightarrow$ \texttt{[4, 5, 7]}.
+			\item input: \texttt{[0, 0, 0, 0, 0]} $\rightarrow$ \texttt{[0]}.
+			\item input: \texttt{[7, 1, 3, 8, 7]} $\rightarrow$ \texttt{[7, 1, 3, 8]}.
+		\end{itemize}
+		But, is this an efficient way to do so?
+	\end{frame}
+
+	\begin{frame}{Python Sets}
+		Python offers a data structure tailored for such cases: sets.
+		\begin{itemize}
+			\item Python sets are much like lists, in terms of being collections of items, however \textbf{each element can appear at most once.}
+			\item So, \textbf{no duplicates} can ever exist in a set.
+			\item This comes at the cost of losing element ordering, in the sense this is allowed in lists.
+			\begin{itemize}
+				\item So, if \texttt{s} is a python set, we cannot say things like \texttt{s[6]} or \texttt{s[-1]}, as with lists.
+				\item Also, \textbf{element order is not preserved} in any way, so, in case you need elements to be stored in a certain order, do not use sets!
+			\end{itemize}
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Python Sets}
+		So, we can improve the above by using a set instead of a list:
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/unique_002.py}
+	\end{frame}
+
+	\begin{frame}{What Will This Print?}
+		\lstinputlisting[language=Python]{../source/sets_001.py}
+	\end{frame}
+
+	\begin{frame}[fragile]{Key Set Operations}
+		Expected output:
+		\begin{lstlisting}
+{1, 4}
+{1, 3, 4, 6, 7, 9}
+{3, 6}
+{3, 6, 7, 9}
+\end{lstlisting}
+		\begin{itemize}
+			\item Python sets support all common maths set operations, such as intersection, union, etc.
+			\item All such functions are called from a certain set and \textbf{return a new set}.
+			\item There are also \texttt{\_update()} variants that update the calling set in place.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{\texttt{a.intersection(b)}}
+		\begin{center}
+			\begin{tikzpicture}
+				\begin{scope}
+					\clip (5.5,2.75) circle (2cm);
+					\fill[streamlinegreen!40] (2.5,2.75) circle (2cm);
+				\end{scope}
+				\draw[thick] (0,0) rectangle (8,5.5);
+				\draw[thick] (2.5,2.75) circle (2cm);
+				\node (a) at (1,1) {\texttt{a}};
+				\draw[thick] (5.5,2.75) circle (2cm);
+				\node (a) at (7,1) {\texttt{b}};
+			\end{tikzpicture}
+		\end{center}
+	\end{frame}
+
+	\begin{frame}{\texttt{a.union(b)}}
+		\begin{center}
+			\begin{tikzpicture}
+			\begin{scope}[transparency group]
+				\fill[streamlinegreen!40] (5.5,2.75) circle (2cm);
+				\fill[streamlinegreen!40] (2.5,2.75) circle (2cm);
+			\end{scope}
+			\draw[thick] (0,0) rectangle (8,5.5);
+			\draw[thick] (2.5,2.75) circle (2cm);
+			\node (a) at (1,1) {\texttt{a}};
+			\draw[thick] (5.5,2.75) circle (2cm);
+			\node (a) at (7,1) {\texttt{b}};
+			\end{tikzpicture}
+		\end{center}
+	\end{frame}
+	
+	\begin{frame}{\texttt{a.difference(b)}}
+		\begin{center}
+			\begin{tikzpicture}
+			\fill[streamlinegreen!40] (2.5,2.75) circle (2cm);
+			\fill[white] (5.5,2.75) circle (2cm);
+			\draw[thick] (0,0) rectangle (8,5.5);
+			\draw[thick] (2.5,2.75) circle (2cm);
+			\node (a) at (1,1) {\texttt{a}};
+			\draw[thick] (5.5,2.75) circle (2cm);
+			\node (a) at (7,1) {\texttt{b}};
+			\end{tikzpicture}
+		\end{center}
+	\end{frame}
+
+	\begin{frame}{\texttt{a.symmetric\_difference(b)}}
+		\begin{center}
+			\begin{tikzpicture}
+			\fill[streamlinegreen!40] (2.5,2.75) circle (2cm);
+			\fill[streamlinegreen!40] (5.5,2.75) circle (2cm);
+			\begin{scope}
+				\clip (5.5,2.75) circle (2cm);
+				\fill[white] (2.5,2.75) circle (2cm);
+			\end{scope}
+			\draw[thick] (0,0) rectangle (8,5.5);
+			\draw[thick] (2.5,2.75) circle (2cm);
+			\node (a) at (1,1) {\texttt{a}};
+			\draw[thick] (5.5,2.75) circle (2cm);
+			\node (a) at (7,1) {\texttt{b}};
+			\end{tikzpicture}
+		\end{center}
+	\end{frame}
+
+	\begin{frame}{Python Comprehensions}
+		Python offers some fancy one--liners to create lists, sets and dictionaries:
+		\begin{itemize}
+			\item List comprehension: \texttt{[x for x in range(5)]} creates the list \texttt{[0, 1, 2, 3, 4]}.
+			\item Set comprehension: \texttt{\{x for x in range(5)\}} creates the set \texttt{\{0, 1, 2, 3, 4\}}.
+			\item Dictionary comprehension: \texttt{\{x: x for x in range(5)\}} creates the dictionary \texttt{\{0:0, 1:1, 2:2, 3:3, 4:4\}}.
+		\end{itemize}
+		For more:
+		\begin{scriptsize}
+			\ohref{https://docs.python.org/3/tutorial/datastructures.html\#list-comprehensions}
+		\end{scriptsize}
+	\end{frame}
+	
+	\begin{frame}{List Slicing}
+		Last time we forgot to mention a nice Python list capability: \textbf{list slicing.}
+		\begin{itemize}
+			\item For instance, to get the elements of a list, \texttt{a}, starting from position 5 up to position 8, we can write: \texttt{a[5:9]} (the right end is always excluded).
+			\item To get everything from start to position 5 with a step of 2: \texttt{a[:6:2]}.
+			\item To get the list in reverse order: \texttt{a[::-1]}.
+		\end{itemize}
+	\end{frame}
+	
+	\section{Fun Time!}\label{sec:fun-time}
+	
+	\sectionframe
+	
+	\setcounter{exno}{0}
+	
+	\begin{frame}{\exno}		
+		In today's materials, under the following link:
+		\begin{center}
+			\ohref{../labs/Programming\_Lab\_02.pdf}
+		\end{center}
+		you can find the second part of a Lab series for this course. Follow the instructions found therein to start working on it!
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		Start working on all Labs found in today's materials \texttt{homework} directory.
+		
+		To help me asses those files, you can name them as follows:
+		\begin{center}
+			\texttt{task\_xxx.py}
+		\end{center}
+		where \texttt{xxx} is the number of the task. For instance, task 5 file could be named \texttt{task\_005.py}.
+		
+		Submit your work via email at: \texttt{v.markos@mc-class.gr}
+	\end{frame}
+
+	\begin{frame}{Homework}
+		\begin{itemize}
+			\item In this week's materials, under the \texttt{homework} directory, you can find some Python programming Tasks. Complete as many of them as you can (preferably all).
+			\item This is important, since tasks such as those provided with this lecture's materials will most probably be part of your course assessment portfolio. So, take care to solve as many of those tasks as possible!
+			\item Share your work at: \texttt{v.markos@mc-class.gr}
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Any Questions?}
+		\begin{minipage}{0.35\textwidth}
+			\raggedright
+			Do not forget to fill in the questionnaire shown right!
+		\end{minipage}\hfill
+		\begin{minipage}{0.58\textwidth}
+			\vspace{0pt}
+			\raggedleft
+			\includegraphics[scale=0.4]{../../assets/post_lesson_assessment.png}
+			\centering
+			\ohref{https://forms.gle/dKSrmE1VRVWqxBGZA}
+		\end{minipage}
+	\end{frame}
+	
+\end{document}

@@ -1,0 +1,625 @@
+% !TeX TS-program = xelatex
+\documentclass[aspectratio=169, 12pt, xcolor=table]{beamer}
+\usefonttheme{professionalfonts}
+\usefonttheme{serif}
+\usepackage[T1]{fontenc}
+\usepackage{fontspec-xetex}
+
+\usepackage{tikz}
+
+\usepackage{booktabs}
+\usepackage{ifthen}
+\usepackage{listings}
+\usepackage{subcaption}
+
+\usetikzlibrary{shapes.geometric, arrows}
+
+\setmainfont{Lato}
+
+%\PassOptionsToPackage[more=table]{xcolor}
+
+% Local configuration
+\renewcommand{\figurename}{}
+\DeclareCaptionFormat{custom}
+{%
+	\tiny #3
+}
+\captionsetup{format=custom}
+
+% Title stuff
+\title{Programming}
+\subtitle{Functions}
+\date{Week 04}
+\author{Vassilis Markos, Mediterranean College}
+
+\usetheme{streamline}
+
+% Local Commands
+\newcommand{\ohref}[1]{\href{#1}{\texttt{#1}}}
+
+% Code listings
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% Tikz style
+
+\tikzstyle{startstop} = [ellipse, rounded corners, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{process} = [rectangle, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{decision} = [diamond, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+% makeatletter stuff
+
+\makeatletter
+\newcommand{\arabicthree}[1]{\expandafter\@arabicthree\csname c@#1\endcsname}
+\newcommand{\@arabicthree}[1]{\ifnum #1<100 0\fi\ifnum #1<10 0\fi\number#1}
+\makeatother
+
+\newcounter{exno}
+\setcounter{exno}{0}
+
+\newcommand{\exno}{\stepcounter{exno}In--class Exercise \#\arabicthree{exno}}
+
+\begin{document}
+
+	\begin{frame}
+		\titlepage
+	\end{frame}
+
+	\begin{frame}{Contents}
+		\tableofcontents
+	\end{frame}
+
+%	\section{A Brief Intro}\label{sec:a-brief-intro}
+%	
+%	\sectionframe
+%	
+%	\begin{headsup}{Desperate Times, Desperate Measures}
+%		\begin{minipage}[t]{0.40\textwidth}
+%			\vspace{0pt}
+%			Since we are transitioning on a new platform, things are still a bit quirky. So, to make sure we keep track of who is here and who is not, please \textbf{scan the QR code shown next} or \textbf{click the link below it} and fill in this form with your information (confidential).
+%		\end{minipage}\hfill
+%		\begin{minipage}[t]{0.58\textwidth}
+%			\vspace{0pt}
+%			\raggedleft
+%			\includegraphics[scale=0.35]{../../assets/attendance_form.png}
+%			\centering
+%			\ohref{https://forms.gle/4yiYhonrjuVs4sCv6}
+%		\end{minipage}
+%	\end{headsup}
+%
+%	\begin{headsup}{Desperate Times, Desperate Measures}
+%		\begin{minipage}[t]{0.50\textwidth}
+%			\vspace{0pt}
+%			For similar reasons, we will also be using a public shared drive folder to keep our materials as long as our platform is a bit unstable. To visit the platform and download this lecture's materials please use the QR shown right or the link below.
+%		\end{minipage}\hfill
+%		\begin{minipage}[t]{0.48\textwidth}
+%			\vspace{0pt}
+%			\raggedleft
+%			\includegraphics[scale=0.25]{../../assets/shared_folder.png}
+%			\centering
+%		\end{minipage}
+%		\vfill
+%		\ohref{https://shorturl.at/FVszq}
+%		\begin{scriptsize}
+%			\ohref{https://drive.google.com/drive/folders/1cUY\_XNJLyGNHRRgfJbxXemf8AFgiMnaF?usp=sharing}
+%		\end{scriptsize}
+%	\end{headsup}
+
+	\section{Last Time's Exercises}\label{sec:last-time-s-exercises}
+	
+	\sectionframe
+	
+	\setcounter{exno}{0}
+	
+	\begin{frame}{\exno}
+		Write a Python program that computes the following sum:
+		\[s=1+\frac{1}{2}+\frac{1}{4}+\frac{1}{8}+\frac{1}{16}+\cdots+\frac{1}{2^n},\]
+		where $n$ is provided by the user.
+		
+		Then, make any modifications needed to compute the following sum:
+		\[s=1-\frac{1}{2}+\frac{1}{4}-\frac{1}{8}+\frac{1}{16}-\cdots\pm\frac{1}{2^n}.\]
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		Write a Python program that asks the user for a positive integer, $n$, and computes its factorial, denoted by $n!$. As a reminder, the factorial of a number, $n$, is given by the following formula:
+		\[n!=n\cdot(n-1)\cdot(n-2)\cdots 2\cdot 1.\]
+		So, for instance:
+		\begin{align*}
+		3!&=3\cdot2\cdot1=6,\\
+		5!&=5\cdot4\cdot3\cdot2\cdot1=120,\\
+		8!&=8\cdot7\cdot6\cdot5\cdot4\cdot3\cdot2\cdot1=40320.
+		\end{align*}
+	\end{frame}
+	
+	\begin{frame}{\exno: Part A}
+		In combinatorics, a quite useful quantity is the number of subsets of $k$ elements from a set of $n$ elements, with $k<n$, given by the following formula:
+		\[\binom{n}{k}=\frac{n!}{k!(n-k)!}.\]
+		Using code from your previous exercise, write a Python program that asks the user for $n, k$ and computes $\binom{n}{k}$ (which is often called the \textbf{binomial coefficient}).
+	\end{frame}
+	
+	\addtocounter{exno}{-1}
+	
+	\begin{frame}{\exno: Part B}
+		Test your previous program on the following input:
+		\[n=10000,\quad k=5000.\]
+		\vspace{-\topsep}
+		\begin{itemize}
+			\item How did it perform?
+			\item Can you find a way to fix it? You can, of course, look around the web for ideas.
+			\item Explain the rationale of your solution.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{\exno: Part A}
+		A positive integer number, $n$, is said to be prime if:
+		\begin{itemize}
+			\item $n>1$, and;
+			\item the only divisors of $n$ are $1$ and $n$.
+		\end{itemize}
+		Explain why the following program, intended to check whether a number $n$ is prime is wrong:
+		\lstinputlisting[language={Python}, basicstyle=\ttfamily\scriptsize]{../source/exercise_004a.py}
+	\end{frame}
+	
+	\addtocounter{exno}{-1}
+	
+	\begin{frame}{\exno: Part B}
+		A positive integer number, $n$, is said to be prime if:
+		\begin{itemize}
+			\item $n>1$, and;
+			\item the only divisors of $n$ are $1$ and $n$.
+		\end{itemize}
+		Write a Python program that asks the user for a positive integer and computes whether it is prime or not. Test your program on the following inputs:
+		\[1, 2, 3, 4, 5, 7, 9, 14, 23, 57, 101.\]
+		The outputs should be (\texttt{True} for prime, \texttt{False} for non--prime):
+		\begin{center}
+			\texttt{False}, \texttt{True}, \texttt{True}, \texttt{False}, \texttt{True}, \texttt{True}, \texttt{False}, \texttt{False}, \texttt{True}, \texttt{False}, \texttt{True}.
+		\end{center}
+	\end{frame}
+	
+	\addtocounter{exno}{-1}
+	
+	\begin{frame}{\exno: Part C}
+		Test your previous program about primes on the following input:
+		\[1234567891.\]
+		\vspace{-\topsep}
+		\begin{itemize}
+			\item How long did it take to terminate?
+			\item Can you make it run faster?
+			\item How long does your new implementation take on $10101012107$?
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		\begin{minipage}{0.5\textwidth}
+			Write a Python function that asks the user for the number of rows and columns and prints a shape like what is shown next on screen (this is for 5 rows and 6 columns).
+		\end{minipage}\hfill
+		\begin{minipage}{0.45\textwidth}
+			\centering
+			\begin{tikzpicture}
+			\foreach \i in {0,...,5} {
+				\foreach \j in {0,...,4} {
+					\node (\i\j) at (\i, \j) {\texttt{*}};
+				}
+			}
+			\end{tikzpicture}
+		\end{minipage}
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		\begin{minipage}{0.5\textwidth}
+			Write a Python function that asks the user for the number of rows / columns (it should be the same in this case) and prints a shape like what is shown next on screen (this is for 5 rows / columns).
+		\end{minipage}\hfill
+		\begin{minipage}{0.45\textwidth}
+			\centering
+			\begin{tikzpicture}
+			\foreach \i in {0,...,4} {
+				\foreach \j in {0,...,4} {
+					\ifthenelse{\i > \j}{}{
+						\node (\i\j) at (\i, \j) {\texttt{*}};
+					}
+				}
+			}
+			\end{tikzpicture}
+		\end{minipage}
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		\begin{minipage}{0.5\textwidth}
+			Write a Python function that asks the user for the number of rows / columns (it should be the same in this case) and prints a shape like what is shown next on screen (this is for 5 rows / columns).
+		\end{minipage}\hfill
+		\begin{minipage}{0.45\textwidth}
+			\centering
+			\begin{tikzpicture}
+			\foreach \i in {0,...,4} {
+				\foreach \j in {0,...,4} {
+					\ifthenelse{\i < \j}{}{
+						\node (\i\j) at (\i, \j) {\texttt{*}};
+					}
+				}
+			}
+			\end{tikzpicture}
+		\end{minipage}
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		\begin{minipage}{0.5\textwidth}
+			Write a Python function that asks the user for the number of rows / columns (it should be the same in this case) and prints a shape like what is shown next on screen (this is for 5 rows / columns).
+		\end{minipage}\hfill
+		\begin{minipage}{0.45\textwidth}
+			\centering
+			\begin{tikzpicture}
+			\foreach \i in {0,...,4} {
+				\foreach \j in {0,...,4} {
+					\ifthenelse{\i=0\OR \j=0}{
+						\node (\i\j) at (\i, \j) {\texttt{*}};
+					}{}
+				}
+			}
+			\end{tikzpicture}
+		\end{minipage}
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		\begin{minipage}{0.5\textwidth}
+			Write a Python function that asks the user for the number of rows / columns (it should be the same in this case) and prints a shape like what is shown next on screen (this is for 5 rows / columns).
+		\end{minipage}\hfill
+		\begin{minipage}{0.45\textwidth}
+			\centering
+			\begin{tikzpicture}
+			\foreach \i in {0,...,4} {
+				\foreach \j in {0,...,4} {
+					\ifthenelse{\i=0\OR \j=0 \OR \i=4\OR \j=4}{
+						\node (\i\j) at (\i, \j) {\texttt{*}};
+					}{}
+				}
+			}
+			\end{tikzpicture}
+		\end{minipage}
+	\end{frame}
+
+	\section{Functions}\label{sec:functions}
+	
+	\sectionframe
+	
+	\begin{frame}{Primality Check}
+		As we saw in some of last time's exercises, one way to check if a number is prime is a follows:
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/primality_001.py}
+	\end{frame}
+
+	\begin{frame}{Many Primes}
+		What if we want to check for many primes one after the other?\pause
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/primality_002.py}
+	\end{frame}
+
+	\begin{frame}[fragile]{What About Distribution?}
+		\begin{itemize}
+			\item Suppose we want to share this amazing functionality about primes with other people / programs.\pause
+			\item For instance, we would like to write something like the following:
+			\begin{lstlisting}[language=Python]
+# some/other/file.py
+n = int(input("Please, enter an integer: "))
+# check if n is prime...
+if n is prime:
+    # do some stuff
+else:
+    # do some other stuff
+\end{lstlisting}\pause
+			\item What are our options?
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{What About Distribution?}
+		\begin{itemize}
+			\item One way is to copy--paste the primality check code we have written in \texttt{source/primality\_001.py}.\pause
+			\item What's the problem with that?\pause
+			\item Consider a simple code--maintenance case:\pause
+			\begin{itemize}
+				\item We find better ways to check primality (as we, actually, did).
+				\item So, we have to update our code.
+				\item But, this means that we also have to update any copies we have created.
+				\item But, what about other people using our code?\pause
+			\end{itemize}
+			\item Evidently, this is not efficient!
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Functions}
+		Can you recall the definition of a function from your Maths module?\pause
+		
+		\begin{quote}
+			A function $f:A\to B$ is a subset $f\subseteq A\times B$ such that \textbf{for each} $a\in A$ there exists a \textbf{unique} $b\in B$ such that $(a,b)\in f$. We write $b=f(a)$ and we call $b$ the value of $f$ at $a$.
+		\end{quote}
+	
+		But, don't worry about this formalism. A useful mental model of a function for our purposes is that of a \textbf{black--box:}
+		
+		\begin{center}
+			\begin{tikzpicture}
+				\node (a) at (0,0) {$a$};
+				\node[rectangle, rounded corners, minimum height = 1cm, minimum width = 1cm, draw=black, fill=streamlinegray] (bb) at (2,0) {$f$};
+				\node (fa) at (4,0) {$f(a)$};
+				\draw[->, thick, black] (a) -- (bb);
+				\draw[->, thick, black] (bb) -- (fa);
+			\end{tikzpicture}
+		\end{center}
+	\end{frame}
+
+	\begin{frame}{More Functions}
+		Functions serve as wrappers that enclose some functionality under a certain name. In Python, we can define our own functions as follows:
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/is_prime_001.py}
+	\end{frame}
+
+	\begin{frame}{The Anatomy Of A Python Function}
+		\begin{minipage}[t]{0.5\textwidth}
+			\vspace{0pt}
+			\begin{itemize}
+				\item In line 3 we define a function using:
+				\begin{itemize}
+					\item The reserved keyword \texttt{def};
+					\item The function's name (\texttt{is\_prime});
+					\item A (potentially empty) comma--separated list of arguments enclosed in parentheses.
+				\end{itemize}
+				\item Each function definition is always followed by a colon (\texttt{:}).
+			\end{itemize}
+		\end{minipage}\hfill
+		\begin{minipage}[t]{0.45\textwidth}
+			\vspace{0pt}
+			\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/is_prime_001.py}
+		\end{minipage}
+	\end{frame}
+
+	\begin{frame}{The Anatomy Of A Python Function}
+		\begin{minipage}[t]{0.5\textwidth}
+			\vspace{0pt}
+			\begin{itemize}
+				\item Lines 4 -- 13 contain what is called the \textbf{function body} which is the code that is being executed whenever a function is being called.
+				\item In lines 6, 11, and 13, the reserved keyword \texttt{return} is used to indicate the output value the function returns in this case (roughly, $f(a)$ in the above).
+			\end{itemize}
+		\end{minipage}\hfill
+		\begin{minipage}[t]{0.45\textwidth}
+			\vspace{0pt}
+			\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/is_prime_001.py}
+		\end{minipage}
+	\end{frame}
+
+	\begin{frame}{\texttt{return} Breaks Code Execution!}
+		Are the following equivalent?
+		
+		\begin{minipage}[t]{0.45\textwidth}
+			\vspace{0pt}
+			\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/is_prime_001.py}
+		\end{minipage}\hfill
+		\begin{minipage}[t]{0.45\textwidth}
+			\vspace{0pt}
+			\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/is_prime_002.py}
+		\end{minipage}
+	\end{frame}
+
+	\begin{frame}{\texttt{return} Breaks Code Execution!}
+		Yes, they are!
+		\begin{itemize}
+			\item \texttt{return} \textbf{breaks code execution}, which means that any piece of code below a \texttt{return} within the same block will not be executed.
+			\item Thus, e.g., if we use \texttt{return} within an \texttt{if} statement, we need not use an \texttt{else} block, since skipping the \texttt{if} block is essentially equivalent to not returning in this case.
+			\item Nice trick to save up some typing. Other than that, there is nothing wrong with using code as in the first (leftmost) example!
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Calling Functions}
+		Now, using the \texttt{is\_prime} function our code can be more readable:
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\tiny]{../source/is_prime_003.py}
+	\end{frame}
+
+	\begin{frame}{Calling Functions}
+		We can even use our function from another file:
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\footnotesize]{../source/is_prime_004.py}
+	\end{frame}
+	
+	\begin{headsup}{Importing Scripts}
+		Did you observe something strange before?\pause
+		\begin{itemize}
+			\item Why did the script not terminate when you first entered a non--positive integer?\pause
+			\item Also, why did it terminate the second time?\pause
+			\item When importing scripts, Python roughly ``copy--pastes'' any code from the imported script into the new one.\pause
+			\item That is, any code that is executable in the imported script is also executed in the importing script.\pause
+			\item But, what if we don't want that behaviour?
+		\end{itemize}
+	\end{headsup}
+
+	\begin{frame}[fragile]{Importing Scripts}
+		In order to inform Python that the executable part of a script should not be executed when importing this we can use the following:
+		\begin{lstlisting}[language=Python]
+<non executable code>
+if __name__ == "__main__":
+    <executable code>
+\end{lstlisting}
+		Under the \texttt{if} statement we put any code we want to be executed whenever the script is directly called while outside it we put any ``importable'' code, e.g., function declarations.
+	\end{frame}
+
+	\begin{frame}{Proper Imports}
+		\begin{minipage}[t]{0.5\textwidth}
+			\vspace{0pt}
+			\lstinputlisting[language=Python, basicstyle=\ttfamily\tiny]{../source/is_prime_005.py}
+		\end{minipage}\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{0pt}
+			\lstinputlisting[language=Python, basicstyle=\ttfamily\tiny]{../source/is_prime_006.py}
+		\end{minipage}
+	\end{frame}
+
+	\begin{frame}{Shorter Imports}
+		\begin{minipage}[t]{0.5\textwidth}
+			\vspace{0pt}
+			\lstinputlisting[language=Python, basicstyle=\ttfamily\tiny]{../source/is_prime_005.py}
+		\end{minipage}\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{0pt}
+			\lstinputlisting[language=Python, basicstyle=\ttfamily\tiny]{../source/is_prime_007.py}
+		\end{minipage}
+	\end{frame}
+
+	\begin{frame}{Fancy Imports}
+		\begin{minipage}[t]{0.5\textwidth}
+			\vspace{0pt}
+			\lstinputlisting[language=Python, basicstyle=\ttfamily\tiny]{../source/is_prime_005.py}
+		\end{minipage}\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{0pt}
+			\lstinputlisting[language=Python, basicstyle=\ttfamily\tiny]{../source/is_prime_008.py}
+		\end{minipage}
+	\end{frame}
+
+	\begin{frame}{Why Use Functions?}
+		\begin{itemize}
+			\item As discussed above, because using functions improves code \textbf{portability} and \textbf{distribution.}\pause
+			\item Also, it is much (much) \textbf{easier to debug} code split into simple distinct functions, as the root cause is usually easier spotted.\pause
+			\item It resembles human thought when it comes to \textbf{solving more complex problems,} e.g, splitting a larger problem into simpler subtasks and then repeat that process, if needed, until the resulting tasks are easy enough the be addressed separately.\pause
+			\item It \textbf{makes code more readable,} which, in general, facilitates both distribution and debugging.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{What Will This Print?}
+		\lstinputlisting[language=Python]{../source/foo_001.py}
+	\end{frame}
+
+	\begin{frame}{What Happens In Vegas\ldots}
+		\begin{minipage}[t]{0.58\textwidth}
+			\vspace{0pt}
+			\begin{itemize}
+				\item \texttt{x} at line 3 is a \textbf{local variable}, i.e., a variable that is defined within the scope of the function and destroyed after its execution.
+				\item So, \texttt{x} at line 3 is not the same as \texttt{x} at line 8.
+				\item In general, this is a common quirk of functions: any argument we define (often called \textit{parameter}) stays local, so no effects appear outside.
+			\end{itemize}
+		\end{minipage}\hfill
+		\begin{minipage}[t]{0.38\textwidth}
+			\vspace{0pt}
+			\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/foo_001.py}
+		\end{minipage}
+	\end{frame}
+	
+	\section{Fun Time!}\label{sec:fun-time}
+	
+	\sectionframe
+	
+	\setcounter{exno}{0}
+	
+	\begin{frame}{\exno}
+		Write a Python function that:
+		\begin{itemize}
+			\item takes a single integer as an argument, and;
+			\item returns \texttt{True} or \texttt{False} depending on whether this number is even or odd.
+		\end{itemize}
+		Demonstrate the functionality of your function by properly using it in a simple Python script.
+	\end{frame}
+
+	\begin{frame}{\exno}
+		The Fibonacci numbers, $f_n$, are a sequence of integer numbers given by the following relation:
+		\[f_n=f_{n-1}+f_{n-2},\quad f_0=0,\ f_1=1.\]
+		That is, each term is the sum of its previous two. For instance, the first 10 Fibonacci numbers are:
+		\[0,1,1,2,3,5,8,13,21,34.\]
+		Write a Python function that takes $n$ as input and prints the $n$--th Fioinacci number, $f_n$.
+	\end{frame}
+
+	\begin{frame}{\exno}
+		Write a Python program that:
+		\begin{itemize}
+			\item asks the user for consecutive positive integers (non--positive input terminates number insertion), and;
+			\item computes and prints their sum and average.
+		\end{itemize}
+		You are required to use \textbf{at least three different functions} for your solution and explain your rationale!
+	\end{frame}
+
+	\begin{frame}{\exno}
+		The standard deviation, $s$, of a set of $n$ numbers $x_1,x_2,\ldots,x_n$ is computed by the following formula:
+		\[s=\sqrt{\frac{(x_1-\mu)^2+(x_2-\mu)^2+\cdots+(x_n-\mu)^2}{n}},\]
+		where $\mu$ is the mean value of those numbers.
+		
+		Write a Python program that asks the user for some non--zero numbers (insertion terminated by inserting 0) and computes their standard deviation. Make sure your program uses \textbf{at least two functions!}
+	\end{frame}
+
+	\begin{frame}{\exno}
+		A string is said to be a \textbf{palindrome} if it reads the same left--to--right and right--to--left. Write a Python function that:
+		\begin{itemize}
+			\item takes a single string as an argument, and;
+			\item returns \texttt{True} or \texttt{False} depending on whether this string is a palindrome.
+		\end{itemize}
+		Demonstrate the functionality of your function by properly using it in a simple Python script.
+		
+		\textit{Hint: In order to access the \texttt{i}--th character of a string named \texttt{s} you can use the syntax \texttt{s[i]}.}
+	\end{frame}
+
+	\begin{frame}{\exno}
+		One way to estimate the square root of a positive float, $a$, is to use the following method:
+		\[x_n=\frac{1}{2}\left(x_{n-1}+\frac{a}{x_{n-1}}\right),\]
+		where the first estimate, $x_0$, is an arbitrary positive float. We say that $x_n$ is an estimation of $\sqrt{a}$ of accuracy $\varepsilon>0$ if $\left| x_n-x_{n-1}\right|<\varepsilon$, i.e., if the two latest estimates we have made are no further apart than $\varepsilon$.
+		
+		Write a Python function that takes $x_0$, $a$, and $\varepsilon$ as arguments and returns the corresponding estimate, $x_n$.
+	\end{frame}
+
+	\begin{frame}{\exno}
+		The Towers of the Hanoi is a well--known puzzle where you have to move disks of different sizes one at a time from a peg to another peg with the help of an auxiliary peg and without ever moving a larger disk on top of a smaller one. You can familiarise yourselves with the game below:
+		\begin{center}
+			\ohref{https://www.mathsisfun.com/games/towerofhanoi.html}
+		\end{center}
+		Develop a Python function that accepts a positive integer $n$ corresponding to the number of disks on the first peg and prints on screen the required steps to solve the problem.
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		Start working on all Labs found in today's materials \texttt{homework} directory.
+		
+		To help me assess those files, you can name them as follows:
+		\begin{center}
+			\texttt{task\_xxx.py}
+		\end{center}
+		where \texttt{xxx} is the number of the task. For instance, task 5 file could be named \texttt{task\_005.py}.
+		
+		Submit your work via email at: \texttt{v.markos@mc-class.gr}
+	\end{frame}
+
+	\begin{frame}{Homework}
+		\begin{itemize}
+			\item In this week's materials, under the \texttt{homework} directory, you can find some Python programming Tasks. Complete as many of them as you can (preferably all).
+			\item This is important, since tasks such as those provided with this lecture's materials will most probably be part of your course assessment portfolio. So, take care to solve as many of those tasks as possible!
+			\item Share your work at: \texttt{v.markos@mc-class.gr}
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Any Questions?}
+		\begin{minipage}{0.35\textwidth}
+			\raggedright
+			Do not forget to fill in the questionnaire shown right!
+		\end{minipage}\hfill
+		\begin{minipage}{0.58\textwidth}
+			\vspace{0pt}
+			\raggedleft
+			\includegraphics[scale=0.4]{../../assets/post_lesson_assessment.png}
+			\centering
+			\ohref{https://forms.gle/dKSrmE1VRVWqxBGZA}
+		\end{minipage}
+	\end{frame}
+	
+\end{document}

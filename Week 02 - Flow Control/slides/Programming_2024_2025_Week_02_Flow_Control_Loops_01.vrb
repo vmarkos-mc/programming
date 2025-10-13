@@ -1,0 +1,11 @@
+\frametitle{Python \texttt {while} Loop Syntax}
+In Python, a \texttt{while} loop adheres to the following syntax:
+^^I^^I\begin{verbatim}
+while <some logical condition>:
+    <Stuff to be repeated while the condition holds>
+\end{verbatim}
+^^I\begin{itemize}
+^^I^^I\item Each \texttt{while} loop starts with the \textbf{\texttt{while}} keyword followed by a logical condition, i.e., a Python expression evaluating to \texttt{True} / \texttt{False}.
+^^I^^I\item Then, we have to use a colon (\texttt{:}) to denote that the loop declaration line has ended.
+^^I^^I\item Below we write any code we want to repeat \textbf{properly indented.}
+^^I\end{itemize}

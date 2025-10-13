@@ -1,0 +1,9 @@
+[0] Config.pm:306> INFO - This is Biber 2.18
+[0] Config.pm:309> INFO - Logfile is 'Programming_Lab_01.blg'
+[50] biber:340> INFO - === Mon Oct 13, 2025, 15:38:25
+[60] Biber.pm:418> INFO - Reading 'Programming_Lab_01.bcf'
+[100] Biber.pm:978> INFO - Found 0 citekeys in bib section 0
+[108] bbl.pm:654> INFO - Writing 'Programming_Lab_01.bbl' with encoding 'UTF-8'
+[108] bbl.pm:757> INFO - Output to Programming_Lab_01.bbl
+[108] Biber.pm:130> WARN - The file 'Programming_Lab_01.bcf' does not contain any citations!
+[108] Biber.pm:132> INFO - WARNINGS: 1

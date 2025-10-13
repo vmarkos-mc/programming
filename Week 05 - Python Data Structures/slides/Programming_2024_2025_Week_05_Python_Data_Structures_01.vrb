@@ -1,0 +1,11 @@
+\frametitle{Are Dictionaries Better?}
+\begin{itemize}
+^^I^^I^^I\item As a rough idea, \texttt{a} is a dictionary, while \texttt{b} is a similar structure, represented as a list of tuples.\pause
+^^I^^I^^I\item Then, we time value retrieval based on random keys. A typical output should look like:
+^^I^^I^^I\begin{lstlisting}
+dict: 0.003898058996128384
+list: 0.8523417840042384
+\end{lstlisting}\pause
+^^I^^I^^I\item This is a chaotic difference! Why is that?\pause
+^^I^^I^^I\item You will learn more in your Data Structures module, so stay tuned\ldots
+^^I^^I\end{itemize}
