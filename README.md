@@ -19,8 +19,13 @@ The content is organized into weekly modules, making it easy to follow in a clas
 | Folder | Description |
 | :--- | :--- |
 | `Week 01 - Introduction to Python` | Covers the basics of the Python language, including installation, the interpreter, variables, basic data types, and simple input/output operations. |
+| `Week 02 - Flow Control` | Focuses on conditional logic, teaching the use of `if`, `elif`, and `else` statements for decision-making in programs. |
+| `Week 03 - Loops` | Covers iterative constructs, including `for` and `while` loops, and techniques for iterating over sequences. |
+| `Week 04 - Functions` | Introduces modularity, defining and calling functions, understanding parameters, return values, and variable scope. |
+| `Week 05 - Python Data Structures` | Detailed look at fundamental built-in collection types: Lists (mutable sequences) and Tuples (immutable sequences). |
+| `Week 06 - More Python Data Structures` | Continues with built-in collections, focusing on Dictionaries (key-value mapping) and Sets (unordered collections of unique elements). |
+| `assets` | Contains images or other static files used in the lecture notes and documentation. |
 | `LICENSE` | The MIT License for this project. |
-| ... | *More weekly modules covering topics like control flow, functions, data structures, etc., will be added here.* |
 
 ## Getting Started
 
