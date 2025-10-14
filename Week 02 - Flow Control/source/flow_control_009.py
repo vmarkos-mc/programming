@@ -9,3 +9,10 @@ elif year % 4 == 0:
     print("Leap year!")
 else:
     print("Not leap year!")
+
+"""
+if year % 4 == 0 or year % 400 == 0:
+    print("leap")
+elif year % 100 != 0:
+    print("not leap")
+"""
