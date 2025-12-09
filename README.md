@@ -24,6 +24,12 @@ The content is organized into weekly modules, making it easy to follow in a clas
 | `Week 04 - Functions` | Introduces modularity, defining and calling functions, understanding parameters, return values, and variable scope. |
 | `Week 05 - Python Data Structures` | Detailed look at fundamental built-in collection types: Lists (mutable sequences) and Tuples (immutable sequences). |
 | `Week 06 - More Python Data Structures` | Continues with built-in collections, focusing on Dictionaries (key-value mapping) and Sets (unordered collections of unique elements). |
+| `Week 07 - Files` | Basic file I/O with Python. |
+| `Week 08 - Exceptions` | What if we do divide by zero? |
+| `Week 09 - Classes and OOP` | A really brief introduction to Object Oriented Programming. |
+| `Week 10 - Advanced Python Fun` | Bits of more advanced Python stuff. |
+| `Week 11 - Recursion` | A quick introduction to recursion. |
+| `Week 12 - Revision` | Revision. |
 | `assets` | Contains images or other static files used in the lecture notes and documentation. |
 | `LICENSE` | The MIT License for this project. |
 

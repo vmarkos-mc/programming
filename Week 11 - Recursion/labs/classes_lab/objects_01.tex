@@ -1,0 +1,183 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{amsmath, amsthm, breakurl, booktabs, colortbl, graphicx, listings, subcaption, tikz, xcolor}
+\usepackage[inline]{enumitem}
+
+%\usepackage[bitstream-charter]{mathdesign}
+%\usepackage[T1]{fontenc}
+
+\usepackage[colorlinks = none, hidelinks]{hyperref}
+
+\DeclareCaptionFormat{custom}
+{%
+	\small{\textbf{\sffamily #1#2}\textit{ #3}}
+}
+\captionsetup{format=custom}
+
+\allowdisplaybreaks
+
+%%%%%%%%%%%%%%%%%
+%% Definitions %%
+%%%%%%%%%%%%%%%%%
+
+% Code listings
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\definecolor{c1}{HTML}{faa08f}
+\definecolor{c2}{HTML}{adadfe}
+
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}
+
+\title{Object--Oriented Python}
+\author{Vassilis Markos}
+\date{\today}
+
+\begin{document}
+	\maketitle
+	
+	\begin{enumerate}[label = E\arabic*.]
+		\item Consider the following two python classes:
+		\begin{lstlisting}[language=Python]
+class A:
+	def __init__(self, n):
+		self.n = n
+
+	def __eq__(self, __other):
+		if not isinstance(__other, A):
+			return False
+		return self.n == __other.n
+
+	class B(A):
+		def __init__(self, n):
+			self.n = n
+		\end{lstlisting}
+		\begin{enumerate}
+			\item Explain what the above code snippet defines. How are the two classes defined? Is there any sort of inheritance? Are we overwriting any default python object methods?
+			\item What will the following python script print?
+			\begin{lstlisting}[language=Python]
+if __name__ == "__main__":
+	x = A(1)
+	y = A(2)
+	print(f"Are x and y equal? {x == y}")
+			\end{lstlisting}
+			\item What about the following?
+			\begin{lstlisting}[language=Python]
+if __name__ == "__main__":
+	x = A(1)
+	y = A(1)
+	print(f"Are x and y equal? {x == y}")
+			\end{lstlisting}
+			\item What about the following?
+			\begin{lstlisting}[language=Python]
+if __name__ == "__main__":
+	u = B(1)
+	v = B(1)
+	print(f"Are u and v equal? {u == v}")
+			\end{lstlisting}
+			\item What about the following?
+			\begin{lstlisting}[language=Python]
+if __name__ == "__main__":
+	u = B(1)
+	v = A(1)
+	print(f"Are u and v equal? {u == v}")
+			\end{lstlisting}
+			\item What if we define the two classes as follows? How do the above cases change, if at all?
+			\begin{lstlisting}[language=Python]
+class A:
+	def __init__(self, n):
+		self.n = n
+
+class B(A):
+	def __init__(self, n):
+		self.n = n
+
+	def __eq__(self, __other):
+		if not isinstance(__other, A):
+			return False
+		return self.n == __other.n
+			\end{lstlisting}
+		\end{enumerate}
+		\item In this exercise we will create a (really--really) simple movie database management system.
+		\begin{enumerate}
+			\item As a first step, create a \texttt{Movie} class, with the following fields:
+			\begin{itemize}
+				\item \texttt{name}, a string representing the name of the movie;
+				\item \texttt{genres}, a list of strings indicating the genre(s) of the movie;
+				\item \texttt{duration}, an integer indicating the duration of the movie in minutes;
+				\item \texttt{director}, a string containing the name of the movie director;
+				\item \texttt{cast}, a list of strings, containing the names of the movie cast.
+			\end{itemize}
+			Moreover, the class should overwrite python's \texttt{\_\_str\_\_} method so as to print a movie as follows (with tabs, spacing and everything as shown below):
+			\begin{verbatim}
+				Movie: A Christmas Carol
+				    Director: Robert Zemeckis
+				    Genre   : Animation, Adventure, Comedy
+				    Duration: 126 minutes
+				    Cast    : Jim Carrey, Garry Oldman, Colin Firth
+			\end{verbatim}
+			You can read more about python's \texttt{\_\_str\_\_} magic function here: \href{https://docs.python.org/3/reference/datamodel.html#object.__str__}{\texttt{https://docs.python.org/3/reference/datamodel.html\#object.\_\_str\_\_}}
+			\item Add an object method, \texttt{write\_to\_file()}, to class \texttt{Movie} that accepts a filename as an argument and adds a line to that file with all movie information in the following form:
+			\begin{verbatim}
+				name | director | genre | duration | cast
+			\end{verbatim}
+			where \texttt{|} is used as a delimiter, to distinguish between the various fields.
+			For instance, for the movie ``A Christmas Carol'' shown above, this line should be as follows (split here just to fin in the page):
+			\begin{verbatim}
+				A Christmas Carol | Rober Zemeckis | Animation,
+				Adventure, Comedy | 126 | Jim Carrey, Garry Oldman,
+				Colin Firth
+			\end{verbatim}
+			\item Add an object method, \texttt{from\_text()}, that accepts a string of the following form:
+			\begin{verbatim}
+				name | director | genre | duration | cast
+			\end{verbatim}
+			and updates all class fields accordingly.
+			
+			\textit{If you wish, you can first read about how this can be achieved by using class methods\footnote{One related source: \href{https://stackoverflow.com/questions/5249813/create-python-objects-from-strings}{https://stackoverflow.com/questions/5249813/create-python-objects-from-strings}.} but it is not compulsory for this part of the exercise to use python's \texttt{@classmethod}.}
+			\item Write a python script that:
+			\begin{itemize}
+				\item Asks the user to provide the name of a movie and then asks for additional information:
+					\begin{itemize}
+						\item movie director,
+						\item genres,
+						\item duration,
+						\item cast.
+					\end{itemize}
+				\item It creates a \texttt{Movie} object with the provided values and writes it to a file (the file has to be created for the first time this script is used).
+				\item It repeats the above until the user enters ``:q'' as the name of the movie.
+			\end{itemize}
+			\item Consider extending the above python script by adding several functionalities. These could include (but should not be restricted to) the following:
+			\begin{itemize}
+				\item duplicate checks, i.e. check whether a movie has already been written into the file;
+				\item querying a movie, i.e., allowing the user not only to enter a movie but also ask for information about a movie;
+				\item \ldots
+			\end{itemize}
+			Try to provide well--thought implementations. For instance, if you implement a querying functionality, what if the movie is not included in the file? How are you going to actually search the file?
+		\end{enumerate}
+	\end{enumerate}
+\end{document}

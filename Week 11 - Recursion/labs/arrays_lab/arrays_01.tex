@@ -1,0 +1,202 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{amsmath, amsthm, breakurl, booktabs, colortbl, enumitem, graphicx, listings, tikz, xcolor}
+
+%\usepackage[bitstream-charter]{mathdesign}
+%\usepackage[T1]{fontenc}
+
+\usepackage[colorlinks = none, hidelinks]{hyperref}
+
+\allowdisplaybreaks
+
+%%%%%%%%%%%%%%%%%
+%% Definitions %%
+%%%%%%%%%%%%%%%%%
+
+% Code listings
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\definecolor{c1}{HTML}{faa08f}
+\definecolor{c2}{HTML}{adadfe}
+
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}
+
+\title{Array Fun (?)}
+\author{Vassilis Markos}
+\date{\today}
+
+\begin{document}
+	\maketitle
+	
+	\begin{enumerate}[label = E\arabic*.]
+		\item Consider the following python script:
+		\begin{lstlisting}[language=Python]
+import random
+
+def foo(n = 100, a = 0, b = 99):
+	x = []
+	for i in range(n):
+		x.append(random.randint(a, b))
+	return x
+
+if __name__ == "__main__":
+	a = foo()
+	b = foo(200)
+	c = foo(50, 10, 20)
+	print(f"a = {a}")
+	print(f"b = {b}")
+	print(f"c = {c}")
+		\end{lstlisting}
+		\begin{enumerate}
+			\item What is the purpose of function \texttt{foo}? What does it accept as arguments and what does it return?
+			\item Can you describe what the above script prints on screen?
+			\item Run the script to make sense of the above.
+		\end{enumerate}
+		\item Consider the following python script:
+		\begin{lstlisting}[language=Python]
+import random
+import string
+
+def bar(n = 100, a = 0, b = 99):
+	letters = string.ascii_lowercase
+	x = dict()
+	i = 0
+	while i < n:
+		key = "".join(random.choice(letters)\
+			  	for _ in range(5))
+		if key in x.keys():
+			continue
+		x[key] = random.randint(a, b)
+		i += 1
+	return x
+
+if __name__ == "__main__":
+	a = bar()
+	b = bar(200)
+	c = bar(50, 10, 20)
+	print(f"a = {a}")
+	print(f"b = {b}")
+	print(f"c = {c}")
+		\end{lstlisting}
+		\begin{enumerate}
+			\item What is the purpose of function \texttt{bar}? What does it accept as arguments and what does it return?
+			\item What is the purpose of ``\texttt{if key in x.keys()}'' in \texttt{bar}?
+			\item Can you describe what the above script prints on screen?
+			\item Run the script to make sense of the above.
+		\end{enumerate}
+		\item
+		\begin{enumerate}
+			\item Write a python function named \texttt{max\_three} that accepts as an argument a list of integers of length at least three, and returns the three largest elements on the list. Take care to raise appropriate exceptions when the size of the received list is less than three.
+			
+			For instance, with \texttt{a = [4, 2, 1, 6, 5, 2]} as an input, \texttt{max\_three} should return: \texttt{4, 5, 6} (regardless of their order).
+			\item Modify \texttt{max\_three} to accept a dictionary as an input, with strings as keys and integers as values, and return the three keys with the largest values (handling ties appropriately). Name your function \texttt{max\_three\_dict}.
+			
+			For instance, with \texttt{a = \{`a':4, `b':5, `c':-2, `d':7, `e':3\}} as input, it should return: \texttt{`a', 
+			`b', `d'}.
+			\item Modify \texttt{max\_three} to accept two arguments:
+			\begin{itemize}
+				\item a list of integers, and;
+				\item a positive integer, $n$.
+			\end{itemize}
+			Now, your function should return the largest $n$ elements from the given list, handling ties an any exceptions appropriately (e.g., the list should have at least $n$ elements, to begin with). Name you function \texttt{max\_n}.
+			\item Modify \texttt{max\_n} to accept a dictionary and a positive integer, $n$, as arguments, in the spirit of E2(b). That is, given a dictionary with strings as keys and integers as values, \texttt{max\_n} should return the keys corresponding to the $n$ largest values in the dictionary. Name your function \texttt{max\_n\_dict}.
+			\item In all the above, use \texttt{foo} from E1 as well as \texttt{bar} from E2 to help you test your functions.
+		\end{enumerate}
+		\item \begin{enumerate}
+			\item Write a function named \texttt{max\_triplet} which accepts a list of positive integers as an argument and returns the positions of the \textbf{three consecutive numbers} in the list which correspond to the largest \textbf{three digit decimal number} (read left to right). For instance, for input \texttt{a = [4, 2, 8, 1, 9, 0, 3, 2]}, the desired output should be: \texttt{5, 6, 7}, since this corresponds to $903$, which is the largest three digit number in this list.
+			\item Write a function named \texttt{max\_triplet\_sum} which accepts a list of positive integers as an argument and returns the positions of the \textbf{three consecutive numbers} in the list with the \textbf{largest sum}. For instance, for input \texttt{a = [4, 2, 8, 1, 9, 0, 3, 2]}, the desired output should be: \texttt{2, 3, 4}, since this corresponds to $8+1+9=18$, which is the largest sum of three consecutive integers in this list.
+			\item Write a function named \texttt{max\_triplet\_sum} which accepts a list of positive integers as an argument and returns the positions of the \textbf{three consecutive numbers} in the list with the \textbf{largest product}. For instance, for input \texttt{a = [4, 5, 8, 1, 9, 0, 3, 2]}, the desired output should be: \texttt{0, 1, 2}, since this corresponds to $4\times 5\times 8=160$, which is the largest product of three consecutive integers in this list.
+			\item Modify the above functions to work for $n$--tuples instead of triplets ($n$ should be provided as an argument). As always, take care to raise exceptions in faulty cases (e.g., when the list does not have an appropriate size). Name your functions \texttt{max\_ntuple}, \texttt{max\_ntuple\_sum}, and \texttt{max\_ntuple\_prod}, respectively.
+			\item Use \texttt{foo} from E1 to help you test your functions.
+		\end{enumerate}
+		\item This is a self--study exercise, so you are expected to heavily look up things online / on other resources. Consider the following python script:
+		\begin{lstlisting}[language=Python]
+import random
+import math
+
+def foobar(m = 20, n = 20, a = 0, b = 99):
+	x = []
+	for i in range(m):
+		y = []
+		for j in range(n):
+			y.append(random.randint(a, b))
+		x.append(y)
+	return x
+
+def foobaz(x):
+	digits = lambda n:math.floor(math.log10(max(n,1)))+1
+	m = 0
+	for i in range(len(x)):
+		for j in range(len(x[i])):
+			d = digits(x[i][j])
+			if d > m:
+				m = d
+	pad = lambda a: " "*(m - digits(a)) + str(a)+" "
+	output = ""
+	for i in range(len(x)):
+		for j in range(len(x[i])):
+			output += pad(x[i][j])
+		output += "\n"
+	return output
+
+if __name__ == "__main__":
+	a = foobar()
+	b = foobar(15, 15)
+	c = foobar(10, 10, 10, 200)
+	print(f"a:\n{foobaz(a)}")
+	print(f"b:\n{foobaz(b)}")
+	print(f"c:\n{foobaz(c)}")
+		\end{lstlisting}
+		\begin{enumerate}
+			\item What is the purpose of \texttt{foobar}?
+			\item What is the purpose of \texttt{foobaz}?
+			\item What does \texttt{lambda} mean in python?
+			\item What are \texttt{digits} and \texttt{pad} computing in \texttt{foobaz}?
+			\item What will this print?
+		\end{enumerate}
+		\item Consider the following grid of numbers:
+		\begin{table}[!htb]
+			\centering
+			\def\arraystretch{1.5}
+			\begin{tabular}{rrrrr}
+				\cellcolor{c1} 1 & \cellcolor{c1} 5 &  6 & 18 &  5 \\
+				\cellcolor{c1}11 & \cellcolor{c1}15 &  0 &  5 &  5 \\
+				13 &  6 & 91 & \cellcolor{c2} 15 & 49 \\
+				 7 &  1 & \cellcolor{c2} 13 & \cellcolor{c2}  8 & \cellcolor{c2} 78 \\
+				 0 & 19 & 22 & \cellcolor{c2} 34 & 84 \\
+			\end{tabular}
+		\end{table}
+	
+		We shall refer to $2\times2$ blocks, such as the \textcolor{c1}{reddish} one, merely as ``blocks'', while we shall call the \textcolor{c2}{violetish} cross--like constructs ``crosses''.
+		\begin{enumerate}
+			\item Write a function named \texttt{max\_block} which finds the \textbf{block with the maximum sum} in a $m\times n$ grid as the above. You can use \texttt{foobar} from above to generate such grids and \texttt{foobaz} to print them. \texttt{max\_block} should return the four positions of the maximum block as a tuple of four 2--tuples.
+			\item Write a function named \texttt{max\_cross} which finds the \textbf{cross with the maximum sum} in a $m\times n$ grid as the above. You can use \texttt{foobar} from above to generate such grids and \texttt{foobaz} to print them. Your function, \texttt{max\_cross}, should return the five positions of the maximum block as a tuple of five 2--tuples.
+			\item Think of a construct like blocks and crosses (tetris experience may come in handy here). Describe it in detail and then develop a python function that detects the maximum sum such construct in a $m\times n$ grid, as \texttt{max\_block} and \texttt{max\_cross} do above. Test your function using \texttt{foobar} and \texttt{foobaz}.
+		\end{enumerate}
+	\end{enumerate}
+\end{document}

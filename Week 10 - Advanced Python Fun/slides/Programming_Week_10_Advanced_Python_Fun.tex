@@ -1,0 +1,239 @@
+% !TeX TS-program = xelatex
+\documentclass[aspectratio=169, 12pt, xcolor=table]{beamer}
+\usefonttheme{professionalfonts}
+\usefonttheme{serif}
+\usepackage[T1]{fontenc}
+\usepackage{fontspec-xetex}
+
+\usepackage{tikz}
+
+\usepackage{booktabs}
+\usepackage{ifthen}
+\usepackage{listings}
+\usepackage{subcaption}
+
+\usetikzlibrary{shapes.geometric, arrows}
+
+\setmainfont{Lato}
+
+%\PassOptionsToPackage[more=table]{xcolor}
+
+% Local configuration
+\renewcommand{\figurename}{}
+\DeclareCaptionFormat{custom}
+{%
+	\tiny #3
+}
+\captionsetup{format=custom}
+
+% Title stuff
+\title{Programming}
+\subtitle{Advanced Python Fun: Part I}
+\date{Week 10}
+\author{Vassilis Markos, Mediterranean College}
+
+\usetheme{streamline}
+
+% Local Commands
+\newcommand{\ohref}[1]{\href{#1}{\texttt{#1}}}
+\newcommand{\listindex}[2]{{\underset{#1}{\small #2}}}
+
+% Code listings
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% Tikz style
+
+\tikzstyle{startstop} = [ellipse, rounded corners, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{process} = [rectangle, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{decision} = [diamond, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\tikzstyle{simple node} = [rectangle, draw=black, minimum width = 0.8cm, minimum height = 0.6cm]
+
+% makeatletter stuff
+
+\makeatletter
+\newcommand{\arabicthree}[1]{\expandafter\@arabicthree\csname c@#1\endcsname}
+\newcommand{\@arabicthree}[1]{\ifnum #1<100 0\fi\ifnum #1<10 0\fi\number#1}
+\makeatother
+
+\newcounter{exno}
+\setcounter{exno}{0}
+
+\newcommand{\exno}{\stepcounter{exno}In--class Exercise \#\arabicthree{exno}}
+
+\begin{document}
+
+	\begin{frame}
+		\titlepage
+	\end{frame}
+
+	\begin{frame}{Contents}
+		\tableofcontents
+	\end{frame}
+
+	\section{\texttt{args} And \texttt{kwargs}}\label{sec:args-and-kwargs}
+	
+	\sectionframe
+	
+	\begin{frame}{Challenge}
+		Define a function \texttt{foo()} that behaves as shown below (DO NOT inspect the contents of foo.py).
+		\lstinputlisting[language=Python]{../source/boom_001.py}
+	\end{frame}
+
+	\begin{frame}{\texttt{foo}}
+		Let us have a look at \texttt{foo()}:
+		\lstinputlisting[language=Python]{../source/foo.py}
+	\end{frame}
+
+	\begin{frame}{\texttt{*args}}
+		\begin{itemize}
+			\item \texttt{*args} is a nice and compact way python allows us to pass positional arguments to a function.
+			\item Roughly, you can thinkg of \texttt{*args} arguments as a tuple (immutable list) of values that is passed as a single argument into a list.
+			\item Essentially, this means that we can provide a function with an arbitrary number of arguments, without having to define multiple versions of it!
+			\item Order matters, in the sense that the contents of \texttt{*args} are spread in the same order they are provided to the function!
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{What Will This Print?}
+		\lstinputlisting[language=Python]{../source/boom_002.py}
+	\end{frame}
+	
+	\begin{frame}[fragile]{Be Careful!}
+		The above should print something like that:
+\begin{lstlisting}
+3
+2
+Traceback (most recent call last):
+  File "boom_002.py", line 11, in <module>
+    print(bar(1))
+TypeError: bar() missing 1 required positional argument: 'b'
+\end{lstlisting}\pause
+		\begin{itemize}
+			\item While \texttt{*args} might be an empty tuple, if we also define other positional arguments, we have to pass them no matter what!\pause
+			\item So, in this case, \texttt{bar()} should always be called with \textbf{at least two arguments!}
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Antoher Challenge}
+		Define a function \texttt{baz()} that behaves as shown below (DO NOT inspect the contents of baz.py).
+		\lstinputlisting[language=Python]{../source/boom_003.py}
+	\end{frame}
+
+	\begin{frame}{\texttt{baz()}}
+		\lstinputlisting[language=Python]{../source/baz.py}
+	\end{frame}
+
+	\begin{frame}{Keyword Arguments}
+		\begin{itemize}
+			\item Much like list arguments, keyword arguments are arguments provided usign keyrwords, in the same form as a Python dictionary.
+			\item The same restrictions to spread positional arguments apply, i.e.:
+			\begin{itemize}
+				\item We can provide an arbitrary number of keyword arguments.
+				\item We can iterate them in the same way we do with dictionaries.
+				\item Order does not matter, since we are passing arguments by keyword.
+			\end{itemize}
+			\item That way, one can pass named arguments to a function, using the same names as in the function's definition.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{\texttt{*args}: The Other Way Around}
+		We can also use \texttt{*args} to spread list contents as arguments into a list, by using the list spread operator, \texttt{*}.
+		\lstinputlisting[language=Python]{../source/boom_004.py}
+	\end{frame}
+
+	\begin{frame}{\texttt{**kwargs}: The Other Way Around}
+		We can also use \texttt{**kwargs} to spread dict contents as arguments, by using the dictionary spread operator, \texttt{**}.
+		\lstinputlisting[language=Python]{../source/boom_005.py}
+	\end{frame}
+
+	\begin{frame}{Some Remarks}
+		\begin{itemize}
+			\item (Reminder) You cannot use a positional argument after a keyword one!
+			\item So, you have to collect all postional arguments at the beginning and all keyword arguments at the end of the function parameters list.
+			\item This also extends to \texttt{*args} and \texttt{**kwargs}, which means that we cannot expect for positional arguments after using \texttt{**kwargs} --- in the same spirit as above.
+			\item One common use of \texttt{**kwargs} is to provide default values to keyword arguments and then allow users to provide custom values whenever they want to.
+		\end{itemize}
+	\end{frame}
+	
+	\section{Fun Time!}\label{sec:fun-time}
+	
+	\sectionframe
+	
+	\setcounter{exno}{0}
+	
+	\begin{frame}{\exno: Revision (Arrays)}
+		Solve all exercises found in:
+		\begin{center}
+			\ohref{labs/arrays\_lab/arrays\_01.pdf}
+		\end{center}
+		Pay attention to the subtle points of each exercise and what you should compute in each time (especially in the two last ones).
+	\end{frame}
+
+	\begin{frame}{\exno: Revision (Files)}
+		Solve all exercises found in:
+		\begin{center}
+			\ohref{labs/files\_lab/files\_01.pdf}
+		\end{center}
+		In all cases, do not hardcode any paths and use appropriate Python libraries to handle proper path finding.
+	\end{frame}
+	
+	\begin{frame}{\exno: Revision (Classes)}
+		Solve all exercises found in:
+		\begin{center}
+			\ohref{labs/classes\_lab/objects\_01.pdf}
+		\end{center}
+		As with the two previous ones, stay calm and pay attention to details. Also, make your designs as succinct as possible!
+	\end{frame}
+
+	\begin{frame}{Any Questions?}
+		\begin{minipage}{0.35\textwidth}
+			\raggedright
+			Do not forget to fill in the questionnaire shown right!
+
+			\vspace{2\topsep}
+
+			\begin{scriptsize}
+				\begin{tabular}{l}
+					\textbf{Office Hours} \\
+					Glyfada: Tuesday, 09:00--10:00, PC Lab \\
+					Pellinis: Wednesday, 15:00--17:00, 203
+				\end{tabular}				
+			\end{scriptsize}
+		\end{minipage}\hfill
+		\begin{minipage}{0.58\textwidth}
+			\vspace{0pt}
+			\raggedleft
+			\includegraphics[scale=0.4]{../../assets/post_lesson_assessment.png}
+			\centering
+			\ohref{https://forms.gle/dKSrmE1VRVWqxBGZA}
+		\end{minipage}
+	\end{frame}
+	
+\end{document}

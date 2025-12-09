@@ -1,0 +1,287 @@
+% !TeX TS-program = xelatex
+\documentclass[aspectratio=169, 12pt, xcolor=table]{beamer}
+\usefonttheme{professionalfonts}
+\usefonttheme{serif}
+\usepackage[T1]{fontenc}
+\usepackage{fontspec-xetex}
+
+\usepackage{tikz}
+
+\usepackage{booktabs}
+\usepackage{ifthen}
+\usepackage{listings}
+\usepackage{subcaption}
+
+\usetikzlibrary{shapes.geometric, arrows}
+
+\setmainfont{Lato}
+
+%\PassOptionsToPackage[more=table]{xcolor}
+
+% Local configuration
+\renewcommand{\figurename}{}
+\DeclareCaptionFormat{custom}
+{%
+	\tiny #3
+}
+\captionsetup{format=custom}
+
+% Title stuff
+\title{Programming}
+\subtitle{Files}
+\date{Week 07}
+\author{Vassilis Markos, Mediterranean College}
+
+\usetheme{streamline}
+
+% Local Commands
+\newcommand{\ohref}[1]{\href{#1}{\texttt{#1}}}
+\newcommand{\listindex}[2]{{\underset{#1}{\small #2}}}
+
+% Code listings
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% Tikz style
+
+\tikzstyle{startstop} = [ellipse, rounded corners, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{process} = [rectangle, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{decision} = [diamond, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\tikzstyle{simple node} = [rectangle, draw=black, minimum width = 0.8cm, minimum height = 0.6cm]
+
+% makeatletter stuff
+
+\makeatletter
+\newcommand{\arabicthree}[1]{\expandafter\@arabicthree\csname c@#1\endcsname}
+\newcommand{\@arabicthree}[1]{\ifnum #1<100 0\fi\ifnum #1<10 0\fi\number#1}
+\makeatother
+
+\newcounter{exno}
+\setcounter{exno}{0}
+
+\newcommand{\exno}{\stepcounter{exno}In--class Exercise \#\arabicthree{exno}}
+
+\begin{document}
+
+	\begin{frame}
+		\titlepage
+	\end{frame}
+
+	\begin{frame}{Contents}
+		\tableofcontents
+	\end{frame}
+
+	\section{Last Time's Exercises}\label{sec:last-time-s-exercises}
+	
+	\sectionframe
+	
+	\setcounter{exno}{0}
+	
+	\begin{frame}{\exno}		
+		In today's materials, under the following link:
+		\begin{center}
+			\ohref{../labs/Programming\_Lab\_02.pdf}
+		\end{center}
+		you can find the second part of a Lab series for this course. Follow the instructions found therein to start working on it!
+	\end{frame}
+
+	\section{Files + Python}\label{sec:files---python}
+	
+	\sectionframe
+	
+	
+	\begin{frame}[fragile]{Creating A Simple File}
+		Consider the following file (\ohref{source/students.txt}):
+		\begin{lstlisting}
+Name,Age,Grade
+Alice,20,A
+Bob,22,B
+Charlie,19,C
+\end{lstlisting}
+		\begin{itemize}
+			\item Our task is to parse all those precious data stored in that file and create a Python dictionary with those data --- for future use.
+			\item How can we even do that?
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Reading A File In Python}
+		We can use something like the following:
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/files_001.py}
+	\end{frame}
+
+	\begin{frame}[fragile]{A Typical Output}
+		The above should print something along the following lines:
+		\begin{lstlisting}
+{'Alice': ('20', 'A'), 'Bob': ('22', 'B'), 'Charlie': ('19', 'C')}
+\end{lstlisting}\pause
+		\begin{itemize}
+			\item There is also a case it might have not even run.\pause
+			\item If so, what is the console writing?\pause
+			\item How can you fix it?
+		\end{itemize}
+	\end{frame}
+
+	\begin{headsup}{The Currently Working Directory (CWD)}
+		\begin{itemize}
+			\item Depending on your Operating System, you might need to properly inform Python about where to look for files you want to parse.
+			\item You can achieve that typically using the following lines of code (adjust for your case):
+			\lstinputlisting[language=Python, firstline=3, lastline=7]{../source/files_002.py}
+		\end{itemize}
+	\end{headsup}
+
+	\begin{headsup}{\texttt{os.path}}
+		In the above we used several functions of the \texttt{os} Python module:
+		\begin{itemize}
+			\item \texttt{os} offers OS--specific functionalities for all popular OSs.
+			\item \texttt{os.path} is a submodule dedicated to paths.
+			\item \texttt{.dirname()} gets the directory name of a certain file.
+			\item \texttt{\_\_file\_\_} is a Python variable related to the file from which it is being invoked.
+			\item \texttt{.abspath()} retrieves the absolute path, i.e., the path starting from the first point of reference for our system (e.g., C on Windows).
+			\item \texttt{.join()} joins a list of paths in an OS--specific way.
+		\end{itemize}
+	\end{headsup}
+
+	\begin{frame}[fragile]{Context Managers}
+		\begin{itemize}
+			\item It is really important to close files appropriately, which is typically achieved by using \texttt{.close()} on a file object.
+			\item Leaving a file unclosed often has no repercussions but there are cases in which an unclosed file will be inaccessible from other processes.
+			\item So, \textbf{do not forget to close files!}
+			\item Python also offers us a nice way to make sure a file is always closed once we are done with it:
+		\end{itemize}
+		\begin{lstlisting}[language=Python]
+with open("filepath", "r") as file:
+    # file processing
+# here the file is considered closed
+\end{lstlisting}
+	\end{frame}
+
+	\begin{frame}[fragile]{Reading Structured Files: CSV}
+		Recall the file \ohref{source/students.txt}:
+		\begin{lstlisting}
+Name,Age,Grade
+Alice,20,A
+Bob,22,B
+Charlie,19,C
+\end{lstlisting}
+		\begin{itemize}
+			\item This file has a certain structure, where each row contains elements separated by commata.
+			\item Such files are called CSV: Comma Seperated Values (files).
+			\item So, isn't there a way to parse them properly?
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Reading Structured Files: CSV}
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/files_003.py}
+	\end{frame}
+
+	\begin{frame}{Reading Structured Files: JSON}
+		There are also other structured file formats, like JSON, which resemble Python dictionaries by a lot:
+		\lstinputlisting[language=java, basicstyle=\ttfamily\scriptsize]{../source/students_w.json}
+	\end{frame}
+
+	\begin{frame}{Reading Structured Files: JSON}
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/files_004.py}
+	\end{frame}
+
+	\begin{frame}{Reading Structured Files: CSV}
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/files_005.py}
+	\end{frame}
+
+	\begin{frame}{Writing Structured Files: JSON}
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\tiny]{../source/files_006.py}
+	\end{frame}
+
+	\begin{frame}{Wrting Files (In General)}
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\tiny]{../source/files_007.py}
+	\end{frame}
+
+	\begin{frame}{Useful File Modes}
+		\begin{itemize}
+			\item \texttt{w}: Write mode (creates a new file or overwrites an existing one).
+			\item \texttt{a}: Append mode (adds to the end of an existing file).
+			\item \texttt{r}: Read mode (opens an existing file for reading).
+		\end{itemize}
+		There are also the corresponding byte--variants (i.e., for files containing bytes):
+		\begin{itemize}
+			\item \texttt{wb}: Write \textbf{bytes} mode (creates a new file or overwrites an existing one).
+			\item \texttt{ab}: Append \textbf{bytes} mode (adds to the end of an existing file).
+			\item \texttt{rb}: Read \textbf{bytes} mode (opens an existing file for reading).
+		\end{itemize}
+	\end{frame}
+	
+	\section{Fun Time!}\label{sec:fun-time}
+	
+	\sectionframe
+	
+	\setcounter{exno}{0}
+	
+	\begin{frame}{\exno}		
+		In today's materials, under the following link:
+		\begin{center}
+			\ohref{../labs/Programming\_Lab\_03.pdf}
+		\end{center}
+		you can find the third part of a Lab series for this course. Follow the instructions found therein to start working on it!
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		Start working on all Labs found in today's materials \texttt{homework} directory.
+		
+		To help me asses those files, you can name them as follows:
+		\begin{center}
+			\texttt{task\_xxx.py}
+		\end{center}
+		where \texttt{xxx} is the number of the task. For instance, task 5 file could be named \texttt{task\_005.py}.
+		
+		Submit your work via email at: \texttt{v.markos@mc-class.gr}
+	\end{frame}
+
+	\begin{frame}{Homework}
+		\begin{itemize}
+			\item In this week's materials, under the \texttt{homework} directory, you can find some Python programming Tasks. Complete as many of them as you can (preferably all).
+			\item This is important, since tasks such as those provided with this lecture's materials will most probably be part of your course assessment portfolio. So, take care to solve as many of those tasks as possible!
+			\item Share your work at: \texttt{v.markos@mc-class.gr}
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Any Questions?}
+		\begin{minipage}{0.35\textwidth}
+			\raggedright
+			Do not forget to fill in the questionnaire shown right!
+		\end{minipage}\hfill
+		\begin{minipage}{0.58\textwidth}
+			\vspace{0pt}
+			\raggedleft
+			\includegraphics[scale=0.4]{../../assets/post_lesson_assessment.png}
+			\centering
+			\ohref{https://forms.gle/dKSrmE1VRVWqxBGZA}
+		\end{minipage}
+	\end{frame}
+	
+\end{document}

@@ -1,0 +1,260 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{amsmath, amsthm, breakurl, booktabs, colortbl, graphicx, listings, subcaption, tikz, xcolor}
+\usepackage[inline]{enumitem}
+
+%\usepackage[bitstream-charter]{mathdesign}
+%\usepackage[T1]{fontenc}
+
+\usepackage[colorlinks = none, hidelinks]{hyperref}
+
+\DeclareCaptionFormat{custom}
+{%
+	\small{\textbf{\sffamily #1#2}\textit{ #3}}
+}
+\captionsetup{format=custom}
+
+\allowdisplaybreaks
+
+%%%%%%%%%%%%%%%%%
+%% Definitions %%
+%%%%%%%%%%%%%%%%%
+
+% Code listings
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\definecolor{c1}{HTML}{faa08f}
+\definecolor{c2}{HTML}{adadfe}
+
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}
+
+\title{Files and Stuff}
+\author{Vassilis Markos}
+\date{\today}
+
+\begin{document}
+	\maketitle
+	
+	\begin{enumerate}[label = E\arabic*.]
+		\item Consider the following python script:
+		\begin{lstlisting}[language=Python]
+# test.py
+file = open("test.txt", "w")
+file.write("Hello, World!")
+file.close()
+		\end{lstlisting}
+		\begin{enumerate}
+			\item What is the purpose of the above script?
+			\item Where is \texttt{test.txt} located?
+			\item Using the native \texttt{os} python module, try to save the above file at \texttt{"./my\_dir/another\_test.txt"}.
+			\item Assume you have the following directory structure in your project:
+			\begin{verbatim}
+				parent_dir
+				|
+				|---working_dir
+				|   |---test.py
+				|   |---test.txt
+			\end{verbatim}
+			Extend the above python script so as to achieve the following directory structure:
+			\begin{verbatim}
+				parent_dir
+				|
+				|---working_dir
+				|   |---test.py
+				|   |---test.txt
+				|---sibling_dir
+				    |---copy_test.txt
+			\end{verbatim}
+			Essentially, you have to create a new directory, named \texttt{sibling\_dir}, and then save a copy of \texttt{test.txt} in \texttt{sibling\_dir}. Both the directory and the file should be created using \textbf{exclusively python} (you should not use your OS capabilities).
+			\item Write the script of question E1(d) using \texttt{with} statements.
+		\end{enumerate}
+		\item The Morse code has been used to communicate using just two symbols: dot ($\cdot$) and dash (---). All basic symbols, i.e., capital case letters of the Latin alphabet (A-Z) and decimal digits (0-9) are represented using just dashes and dots. You can read more on Morse code in the following Wikipedia lemma:\\ \href{https://en.wikipedia.org/wiki/Morse_code}{\texttt{https://en.wikipedia.org/wiki/Morse\_code}}.
+		\begin{enumerate}
+			\item Write a python function named \texttt{text\_to\_morse()} which accepts a string consisting of alphanumeric characters, digits, and, potentially, spaces, and translates it to Morse code. Use \texttt{" "} (the space character) as a word delimiter in your Morse translation and \texttt{|} as a character delimiter.
+			\item Write a python function named \texttt{morse\_to\_text()} which accepts a string consisting of dashes and dots (i.e., Morse code) and the word and character delimiters used above and returns the corresponding text. In case you find any invalid combinations of dashes and dots, your function should raise an appropriate exception.
+			\item Consider the following piece of Morse code:
+			\begin{center}
+				\texttt{..{-}{-}{-}}
+			\end{center}
+			This can be interpreted as ``2'' (a single character), as well as ``UM'' (i.e., as two characters). Such ambiguities make the use of a character delimiter necessary. Assume that you receive a Morse message in which characters have not been delimited, thus there are more than one possible interpretations, as above.
+			\begin{enumerate}
+				\item How would you address this problem? Describe your idea in text (e.g., using pseudocode).
+				\item Write a python function, \texttt{decipher\_morse()}, that accepts a Morse code string consisting only of dashes and dots and returns a list containing all possible interpretations of that string.
+			\end{enumerate}
+			\item Write a python script that:
+			\begin{itemize}
+				\item asks the user whether they wish to translate from natural language to Morse code or vice versa;
+				\item asks the user to provide a file to be translated, either in natural language or Morse code (depending on user's previous choice);
+				\item translates the provided piece of text / Morse code and stores the output into an appropriately named file.
+			\end{itemize}
+			In your solution, make use of any functions developed above and use exceptions when appropriate. Moreover, consider the case where the user provides Morse code that has not been character delimited (i.e., they have forgotten to use "|"). In that case, inform the user about that and provide all possible interpretations, asking them to choose which one is the appropriate one.
+		\end{enumerate}
+		\item Your local school has asked you to compute some key descriptive statistics about its students' height distribution. Namely, they have asked you to compute:
+		\begin{itemize}
+			\item mean height,
+			\item standard height deviation,
+			\item median height (50\% percentile),
+			\item Q1 and Q3 (25\% and 75\% percentiles).
+		\end{itemize}
+		To do so:
+		\begin{enumerate}
+			\item Write a python function, \texttt{read\_input()}, that repeatedly asks the user for numbers (student heights) and returns a list with these numbers.
+			\item Write a python function, \texttt{mean\_value()}, which accepts a list of numbers as an argument and returns its mean value.
+			\item Write a python function, \texttt{std()}, which accepts a list of numbers as an argument and returns its standard deviation.
+			\item Write a python function, \texttt{percentile()}, which accepts a list of numbers and a number, $p$, between $0.0$ and $1.0$ as arguments and returns the corresponding $p$ percentile.
+			\item Write a python function, \texttt{write\_results()}, which accepts a list of numbers and computes its length, its mean value, standard deviation, median, Q1 and Q3 and writes them in a file named \texttt{results.txt}. This function should check for a file with the same name and, in case it exists, it should save it as \texttt{results\_xxx.txt}, where \texttt{xxx} is the number of files with the same name already found. For instance, if there has already been saved a file named \texttt{results.txt}, you should save your file as \texttt{results\_001.txt}. If there are 3 files, named \texttt{results.txt}, \texttt{results\_001.txt} and \texttt{results\_002.txt}, you should save your file as \texttt{results\_003.txt} and so on.
+			
+			At last, the format of your file should be as follows:
+			\begin{verbatim}
+				|----------|---------|
+				| size     | 200     |
+				| mean     | 168.06  |
+				| std      | 28.75   |
+				| median   | 167     |
+				| Q1       | 158     |
+				| Q3       | 179     |
+				|----------|---------|
+			\end{verbatim}
+			
+			\textit{Hint:} If you have any questions on any statistics terms used above, have a look at a really (really) brief crash--course on descriptive statistics at the end of this file.
+		\end{enumerate}
+		\item \begin{enumerate}
+			\item Write a function, \texttt{write\_list()}, that accepts a list of integers and a string as arguments, and writes this list into a \texttt{.txt} file named according to the provided string. For instance, if provided with the following list:
+			\begin{verbatim}
+				a = [3, 5, 1, 0, -2]
+			\end{verbatim}
+			and the string \texttt{"numbers"}, \texttt{write\_list()} should store this list as the following string:
+			\begin{verbatim}
+				3,5,1,0,-2
+			\end{verbatim}
+			in a file named \texttt{numbers.txt}. Take care to handle the case of a file with the same name already existing at the same directory in a way similar to E3(e).
+			\item Write a function, \texttt{read\_list()}, that accepts a filename of a file containing a list (as a string), reads the corresponding file and returns the list included in it as a python list. For instance, in case the string \texttt{"numbers.txt"} is provided, \texttt{read\_list()} should open up the file \texttt{numbers.txt} and read its contents, e.g.:
+			\begin{verbatim}
+				3,5,1,0,-2
+			\end{verbatim}
+			Then, it should return the following list:
+			\begin{verbatim}
+				read_list() -> [3, 5, 1, 0, -2]
+			\end{verbatim}
+			\item Write a python script that:
+			\begin{itemize}
+				\item Reads a list of integers from a user (input terminates by entering \texttt{"q"} instead of a positive integer).
+				\item Saves that list into a file (asking the user for the desired file name).
+				\item Computes the mean value, standard deviation and median of the provided numbers and prints them on screen.
+				\item Asks the user if they wish to enter some more numbers:
+				\begin{itemize}
+					\item If no, the program terminates.
+					\item If yes, the program:
+					\begin{enumerate*}[label = (\roman*)]
+						\item reads the list from the saved file,
+						\item then reads any numbers the user has to provide,
+						\item appends them to the loaded list,
+						\item recomputes the corresponding mean value,
+						\item standard deviation and median,
+						\item and then stores the new list at the same file,
+						\item and asks again if the user wants to provide some more numbers.
+					\end{enumerate*}
+				\end{itemize}
+			\end{itemize}
+		\end{enumerate}
+	\end{enumerate}
+
+	\clearpage\newpage
+
+	\subsection*{A Crash--course in Descriptive Statistics}
+	%
+	Descriptive statistics is that sub--field of statistics concerned with the description of a given sample, providing a draft overview of its distribution through statistical measures. Some of the key statistical measures include mean value, standard deviation, and 25\%, 50\% and 75\% percentiles (Q1, Q2 / median, Q3).
+	%
+	%
+	%
+	\subsubsection*{Measures of Position and Dispersion}
+	%
+	For instance, consider the following sample of 7 observations:
+	\[6,4,7,8,1,0,4.\]
+	The size of this sample is $n=7$ (the count of the observations), while its mean value is computed by summing all observations and dividing by sample size:
+	\[\mu=\frac{6+4+7+8+1+0+4}{7}=\frac{30}{7}\approx4.29.\]
+	To compute the standard deviation of this sample, we use the following table:
+	\begin{table}[!htb]
+		\centering
+		\begin{tabular}{*8{r}}
+			\toprule
+			$x_i$ & 6 & 4 & 7 & 8 & 1 & 0 & 4 \\\midrule
+			$x_i-\mu$ & -1.71 & -0.29 & 2.71 & 3.71 & -3.29 & -4.29 & -0.29 \\\midrule
+			$(x_i-\mu)^2$ & 2.92 & 0.08 & 7.34 & 13.76 & 10.82 & 18.40 & 0.08 \\\midrule
+			$\sum (x_i-\mu)^2$ & \multicolumn{7}{l}{53.4} \\\midrule
+			$s^2=\frac{1}{n}\sum (x_i-\mu)^2$ & \multicolumn{7}{l}{$\frac{53.4}{7}\approx7.63$} \\\midrule
+			$s=\sqrt{s^2}$ & \multicolumn{7}{l}{$\sqrt{7.63}\approx2.76$} \\\bottomrule
+		\end{tabular}
+		\caption{A visual way to compute a sample's standard deviation, $s=\sqrt{s^2}$. $x_i$ denotes the $i$-th observation.}
+		\label{tab:001}
+	\end{table}
+
+	In a nutshell, to compute $s=\sqrt{s^2}$ we work as follows:
+	\begin{itemize}
+		\item We subtract the mean value, $\mu$, from each sample observation, $x_i$.
+		\item We square all $x_i-\mu$ computed above.
+		\item We sum all squares computed above.
+		\item We divide the computed sum by sample size, $n$, which yields $s^2$.
+		\item We take the square root of the above, obtaining $s$.
+	\end{itemize}
+	%
+	%
+	%
+	\subsubsection*{Percentiles}
+	%
+	In general, a $p$ percentile is that observation (or number, in general) that leaves $p\%$ of the sample below it and the rest $(100-p)\%$ of the sample above it (assuming that the sample is ordered). When it comes to computing percentiles, we first have to sort our samples. In our case, this means that from:
+	\[6,4,7,8,1,0,4,\]
+	we get:
+	\[0,1,4,4,6,7,8.\]
+	Then, the median (Q2, 50\% percentile) is easily computed by finding the median observation, i.e. the fourth observation out of the 7 in our sample. Thus, in our case, $Q2=4$. In general, the median observation is found at position $\frac{n+1}{2}$, which, in our case is $\frac{7+1}{2}=4$, so, the fourth observation, as claimed above. In a similar fashion, Q1 is found at position $\frac{n+1}{4}=\frac{7+1}{4}=2$, so $Q1=1$ in our case, and $Q3$ is found at position $\frac{3(n+1)}{4}=\frac{3(7+1)}{4}=6$, so $Q3=7$. Overall:
+	\begin{itemize}
+		\item $Q1$ is found at position: $\frac{n+1}{4}$.
+		\item $Q2$ is found at position: $\frac{n+1}{2}$.
+		\item $Q3$ is found at position: $\frac{3(n+1)}{4}$.
+	\end{itemize}
+	
+	Consider the following sample:
+	\[5,6,1,4,5,3.\]
+	Sorted, this reads:
+	\[1,3,4,5,5,6.\]
+	To compute the median, we have to look at position:
+	\[\frac{n+1}{2}=\frac{6+1}{2}=3.5.\]
+	But, where is position 3.5 in the above sample? In such cases, where a sample has an even size ($n=6$ in our case), we have to look at the two positions closest to 3.5, i.e., 3 and 4 in our case. At those positions we have 4 and 5, respectively, so Q2 in our case is:
+	\[Q2=\frac{4+5}{2}=\frac{9}{2}=4.5.\]
+	Similarly, for Q1 we have to look at position:
+	\[\frac{n+1}{4}=\frac{7}{4}=1.75.\]
+	This means that we should take the average of observations at positions 1 and 2, i.e.:
+	\[Q1=\frac{1+3}{2}=2.\]
+	At last, for Q3 we look at position:
+	\[\frac{3(n+1)}{4}=\frac{3\cdot7}{4}=5.25,\]
+	so, at positions 5 and 6:
+	\[Q3=\frac{5+6}{2}=\frac{11}{2}=5.5.\]
+	%
+	%
+	%
+\end{document}

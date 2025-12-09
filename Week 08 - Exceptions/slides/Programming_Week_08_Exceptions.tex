@@ -1,0 +1,331 @@
+% !TeX TS-program = xelatex
+\documentclass[aspectratio=169, 12pt, xcolor=table]{beamer}
+\usefonttheme{professionalfonts}
+\usefonttheme{serif}
+\usepackage[T1]{fontenc}
+\usepackage{fontspec-xetex}
+
+\usepackage{tikz}
+
+\usepackage{booktabs}
+\usepackage{ifthen}
+\usepackage{listings}
+\usepackage{subcaption}
+
+\usetikzlibrary{shapes.geometric, arrows}
+
+\setmainfont{Lato}
+
+%\PassOptionsToPackage[more=table]{xcolor}
+
+% Local configuration
+\renewcommand{\figurename}{}
+\DeclareCaptionFormat{custom}
+{%
+	\tiny #3
+}
+\captionsetup{format=custom}
+
+% Title stuff
+\title{Programming}
+\subtitle{Exceptions}
+\date{Week 08}
+\author{Vassilis Markos, Mediterranean College}
+
+\usetheme{streamline}
+
+% Local Commands
+\newcommand{\ohref}[1]{\href{#1}{\texttt{#1}}}
+\newcommand{\listindex}[2]{{\underset{#1}{\small #2}}}
+
+% Code listings
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% Tikz style
+
+\tikzstyle{startstop} = [ellipse, rounded corners, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{process} = [rectangle, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{decision} = [diamond, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=none]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\tikzstyle{simple node} = [rectangle, draw=black, minimum width = 0.8cm, minimum height = 0.6cm]
+
+% makeatletter stuff
+
+\makeatletter
+\newcommand{\arabicthree}[1]{\expandafter\@arabicthree\csname c@#1\endcsname}
+\newcommand{\@arabicthree}[1]{\ifnum #1<100 0\fi\ifnum #1<10 0\fi\number#1}
+\makeatother
+
+\newcounter{exno}
+\setcounter{exno}{0}
+
+\newcommand{\exno}{\stepcounter{exno}In--class Exercise \#\arabicthree{exno}}
+
+\begin{document}
+
+	\begin{frame}
+		\titlepage
+	\end{frame}
+
+	\begin{frame}{Contents}
+		\tableofcontents
+	\end{frame}
+
+	\section{Last Time's Exercises}\label{sec:last-time-s-exercises}
+	
+	\sectionframe
+	
+	\setcounter{exno}{0}
+	
+	\begin{frame}{\exno}		
+		In today's materials, under the following link:
+		\begin{center}
+			\ohref{../labs/Programming\_Lab\_03.pdf}
+		\end{center}
+		you can find the third part of a Lab series for this course. Follow the instructions found therein to start working on it!
+	\end{frame}
+
+	\section{Exceptions}\label{sec:exceptions}
+	
+	\sectionframe
+	
+	
+	\begin{frame}{What Might Go Wrong Here?}
+		\lstinputlisting[language=Python]{../source/whoops_001.py}\pause
+		\begin{itemize}
+			\item Division by zero, of course!\pause
+			\item So, how to catch this?
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Catching Errors}
+		One way to handle errors as the above is to use a simple if or while block:
+		\lstinputlisting[language=Python]{../source/whoops_002.py}
+	\end{frame}
+
+	\begin{frame}{Still, Something Might Go Wrong Here\ldots}
+		\lstinputlisting[language=Python]{../source/whoops_001.py}\pause
+		\begin{itemize}
+			\item The user might enter values that cannot be parsed as floats!\pause
+			\item For instance, \texttt{foo} or \texttt{one}.\pause
+			\item How to handle this?
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Catching Exceptions}
+		\begin{itemize}
+			\item There are several kinds of errors, but we can split them, in general, into two broad categories:
+			\begin{itemize}
+				\item Compilation time errors.
+				\item Execution time errors.
+			\end{itemize}
+			\item The first ones can be captured prior to program compilation (interpretation, if you prefer), so we might have ways to handle them in our code with a 100\% success rate.
+			\item For the latter, this might or might not be the case.
+			\begin{itemize}
+				\item In the case of division by zero this is easily fixed by monitoring user input.
+				\item In the case of malformed input we need more sophisticated machinery\ldots
+			\end{itemize}
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Python Exceptions}
+		One way to handle malformed user input is through Python exceptions:
+		\lstinputlisting[language=Python]{../source/whoops_003.py}
+	\end{frame}
+
+	\begin{frame}{Okay, But\ldots}
+		\begin{itemize}
+			\item \ldots a user might provide malformed input more than once.\pause
+			\item How to fix that?\pause
+		\end{itemize}
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/whoops_004.py}
+	\end{frame}
+
+	\begin{frame}{\texttt{pass}}
+		\begin{itemize}
+			\item So far we have used \texttt{pass} as a mysterious Python spell that stops the text editor from complaining when a function has been declared but not defined.
+			\item However, \texttt{pass} is actually a directive that asks the compiler to just proceed with this piece of code and ``pass'' to the next directive.
+			\item You can think of it as a ``do nothing and go on'' command.
+			\item So, in the above case, we essentially keep track of value errors and do nothing in that case, other than asking again for user input --- since we do not change the value of the \texttt{is\_valid} flag.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{A More Elegant Solution}
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/whoops_005.py}
+	\end{frame}
+	
+	\begin{frame}{What About \texttt{b}?}
+		\begin{itemize}
+			\item So far, we have properly handled input in the case of our first number, \texttt{a}.
+			\item What about \texttt{b}?
+			\item Of course we can just repeat the above piece of code but, what's the problem with that?\pause
+			\item \textbf{CODE REPETITION!}
+			\item So, what would be a better solution?
+			\item To use a function to make sure we properly read a float from users.\pause
+			\item Implement it!
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{One Way\ldots}
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\tiny]{../source/whoops_006.py}
+	\end{frame}
+
+	\begin{frame}{Catching Different Exceptions}
+		What do you expect the following script to print?
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/whoops_007.py}
+	\end{frame}
+
+	\begin{frame}{Catching Different Exceptions}
+		\begin{itemize}
+			\item We can handle as many exceptions as we want to by using multiple \texttt{except} blocks.
+			\item You can think of it as simple \texttt{if-elif} blocks.
+			\item So, in case you know that two or more exceptions might be thrown from a certain piece of code, you can catch them and handle them separately in an entirely different way.
+			\item \textbf{Tip:} Only handle exceptions you know they might occur and not just any exception you can think of!
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{A Brief Break?}
+		Run and then terminate the following script using \texttt{Ctrl + C}:
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\scriptsize]{../source/whoops_008.py}
+	\end{frame}
+
+	\begin{frame}{Or What?}
+		\begin{itemize}
+			\item Since \texttt{except} blocks work like \texttt{if-elif} ones, what are we still missing?\pause
+			\item \texttt{else} Blocks!
+			\item With Python exceptions we can also use \texttt{else} to denote code that should run in case no exceptions occur:
+		\end{itemize}
+		\lstinputlisting[language=Python, basicstyle=\ttfamily\tiny]{../source/whoops_009.py}
+	\end{frame}
+
+	\begin{frame}{Finally\ldots}
+		\begin{itemize}
+			\item What if we open a file and something goes wrong?\pause
+			\item We should wrap things up and make sure we have closed the file!
+			\item This means that we need a way to make sure that regardless of whether exceptions occur or not, we can perform a certain action before the program terminates its execution.
+			\item Using Python exceptions, this is achieved by the \texttt{finally} block.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Raising An Exception}
+		\begin{itemize}
+			\item In some cases, you might want to inform others (be it humans or other processes) that something has gone wrong.
+			\item This can be achieved by raising an exception through the \texttt{raise} keyword.
+			\item That is, we can interrupt, e.g., a function's execution by raising an exception that we let others to decide how to handle.
+			\item This is quite useful when it comes to processes we know might be faulty but we also know how to fix.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{What Will This Print?}
+		\lstinputlisting[language=Python]{../source/whoops_010.py}
+	\end{frame}
+
+	\begin{frame}{A Few Final(ly) Notes}
+		\begin{itemize}
+			\item If an exception occurs during execution of the try clause, the exception may be handled by an except clause. If the exception is not handled by an except clause, the exception is re-raised after the finally clause has been executed.
+			\item An exception could occur during execution of an except or else clause. Again, the exception is re-raised after the finally clause has been executed.
+			\item If the finally clause executes a break, continue or return statement, exceptions are not re-raised.
+		\end{itemize}		
+	\end{frame}
+
+	\begin{frame}{A Few Final(ly) Notes}
+		\begin{itemize}
+			\item If the try statement reaches a break, continue or return statement, the finally clause will execute just prior to the break, continue or return statement’s execution.
+			\item If a finally clause includes a return statement, the returned value will be the one from the finally clause’s return statement, not the value from the try clause’s return statement.
+		\end{itemize}
+	\end{frame}
+	
+	\section{Fun Time!}\label{sec:fun-time}
+	
+	\sectionframe
+	
+	\setcounter{exno}{0}
+	
+	\begin{frame}{\exno}
+		Revisit \texttt{source/whoops\_006.py}:
+		\begin{itemize}
+			\item There we have created a function to safely read floats from users.
+			\item Meanwhile, we have handled division by zero by repeatedly asking the user to provide valid input in case of zero denominators.
+			\item Rewrite this part of code utilising Python exception handling.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{\exno: Logging}
+		One common practice regarding exceptions and exception handling is logging, i.e., the practice of keeping track of any exceptions into a file.
+		\begin{itemize}
+			\item Create a small Python script that asks user for some input and computes a simple output. It might be as simple as asking for two integers and computing their sum.
+			\item Put it in a while loop and handle exceptions appropriately, making sure no error can interrupt its functionality other than \texttt{KeyboardInterrupt}.
+			\item Keep logs of all errors. You can do this either manually or by using relevant python libraries, such as logging.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{\exno}		
+		In today's materials, under the following link:
+		\begin{center}
+			\ohref{../labs/Programming\_Lab\_04.pdf}
+		\end{center}
+		you can find the fourth part of a Lab series for this course. Follow the instructions found therein to start working on it!
+	\end{frame}
+	
+	\begin{frame}{\exno}
+		Start working on all Labs found in today's materials \texttt{homework} directory.
+		
+		To help me asses those files, you can name them as follows:
+		\begin{center}
+			\texttt{task\_xxx.py}
+		\end{center}
+		where \texttt{xxx} is the number of the task. For instance, task 5 file could be named \texttt{task\_005.py}.
+		
+		Submit your work via email at: \texttt{v.markos@mc-class.gr}
+	\end{frame}
+
+	\begin{frame}{Homework}
+		\begin{itemize}
+			\item In this week's materials, under the \texttt{homework} directory, you can find some Python programming Tasks. Complete as many of them as you can (preferably all).
+			\item This is important, since tasks such as those provided with this lecture's materials will most probably be part of your course assessment portfolio. So, take care to solve as many of those tasks as possible!
+			\item Share your work at: \texttt{v.markos@mc-class.gr}
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Any Questions?}
+		\begin{minipage}{0.35\textwidth}
+			\raggedright
+			Do not forget to fill in the questionnaire shown right!
+		\end{minipage}\hfill
+		\begin{minipage}{0.58\textwidth}
+			\vspace{0pt}
+			\raggedleft
+			\includegraphics[scale=0.4]{../../assets/post_lesson_assessment.png}
+			\centering
+			\ohref{https://forms.gle/dKSrmE1VRVWqxBGZA}
+		\end{minipage}
+	\end{frame}
+	
+\end{document}
