@@ -36,3 +36,7 @@ def next_point(point, move):
     return None # Just for clarity: we do not handle any other input and, by default, python functions
     # do return None.
 
+
+def is_game_over(snake):
+    '''Boolean function determining whether a game of Snake is over (True) or not (False)'''
+    return cuts_self(snake)
