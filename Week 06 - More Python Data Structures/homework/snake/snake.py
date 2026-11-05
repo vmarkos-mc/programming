@@ -1,5 +1,10 @@
 # snake.py
 
+from random import random, choice
+
+GRID_SIZE = 100
+P_ADD_FOOD = 0.1
+
 def cuts_self(snake):
     '''Boolean function returning `True` when a snake cuts itself'''
     return snake[0] in snake[1:]
@@ -37,6 +42,22 @@ def next_point(point, move):
     # do return None.
 
 
+def update_food(food):
+    '''Accepts a list of points corresponding to food locations and updates it by
+    possibly adding some food with some probability P_ADD_FOOD.
+    
+    Mathematical addendum: This approach does not pick new food points uniformly at
+    random. To do so, we could implement reservoir sampling, or similar alternatives.
+    Here, instead, we strive for simplicity.'''
+    if random() > P_ADD_FOOD: # At random, determined whether to add new food or not
+        return
+    food_point = (choice(range(GRID_SIZE)), choice(range(GRID_SIZE)))
+    while food_point in food:
+        food_point = (choice(range(GRID_SIZE)), choice(range(GRID_SIZE)))
+    food.append(food_point)
+
+
 def is_game_over(snake):
     '''Boolean function determining whether a game of Snake is over (True) or not (False)'''
     return cuts_self(snake)
+
