@@ -34,5 +34,5 @@ def start_keyboard_listener():
         return ''
     listener = keyboard.Listener(on_press=on_press)
     listener.start()
-    listener.join() # TODO: Is this really needed?
+    # listener.join() # TODO: Is this really needed?
     return listener

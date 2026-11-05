@@ -10,9 +10,9 @@ if __name__ == '__main__':
     food = list(zip(sample(range(GRID_SIZE), 20), sample(range(GRID_SIZE), 20)))
     current_move = 'a' # Initial snake moving direction
     kb_listener = start_keyboard_listener()
-    while not is_game_over():
+    while not is_game_over(snake):
         draw_grid(GRID_SIZE, snake, food)
-        move_snake(current_move)
+        move_snake(snake, food, current_move)
         if kb_listener: # Double check this returns the on_press listener
             current_move = kb_listener
         update_food(food)
