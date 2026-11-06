@@ -12,6 +12,7 @@ EMPTY_PT = ' '
 
 def draw_grid(n, snake, food):
     '''Draws a grid including the snake and related food instances'''
+    print('\x1b[1;37;40m', end='')
     for i in range(n):
         for j in range(n):
             if (i, j) in snake:
@@ -21,18 +22,26 @@ def draw_grid(n, snake, food):
             else:
                 print(EMPTY_PT, end=' ')
         print() # As usual, just to change lines.
+    print(f'\x1b[{n}A\x1b[{n}D', end='')
 
 
-def start_keyboard_listener():
-    def on_press(key):
+class KeyboardListener:
+    '''Utility class implementing a keyboard listener'''
+    def __init__(self):
+        self.last_key = None
+        self.listener = keyboard.Listener(on_press=self._on_press)
+        self.listener.start()
+
+
+    def _on_press(self, key):
         try:
-            key_char = key.char
+            self.last_key = key.char.lower()
         except AttributeError:
-            return ''
-        if key_char in 'wasd':
-            return key_char
-        return ''
-    listener = keyboard.Listener(on_press=on_press)
-    listener.start()
-    # listener.join() # TODO: Is this really needed?
-    return listener
+            pass
+
+
+    def get_key(self):
+        key = self.last_key
+        self.last_key = None
+        return key
+
