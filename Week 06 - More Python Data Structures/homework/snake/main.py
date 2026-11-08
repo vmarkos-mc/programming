@@ -17,7 +17,7 @@ def main(scr):
     while not is_game_over(snake):
         key = scr.getch()
         if key in [97, 100, 115, 119]:
-            current_move = key
+            current_move = chr(key)
         draw_grid(GRID_SIZE, snake, food, scr)
         move_snake(snake, food, current_move)
         update_food(food)
