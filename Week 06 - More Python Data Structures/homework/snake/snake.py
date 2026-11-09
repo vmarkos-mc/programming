@@ -1,13 +1,17 @@
 # snake.py
 
-from random import random, choice
+from random import random, choice, choices
+from utils import draw_grid
 
-GRID_SIZE = 10
-P_ADD_FOOD = 0.1
+# You can change the following for testing or just to make the game more interesting.
+GRID_SIZE = 10 # Side size of the square grid.
+P_ADD_FOOD = 0.1 # Probability to add a new food on the grid.
+N_FOOD = 20 # Number of food instances to be added on the grid initially.
 
 def cuts_self(snake):
     '''Boolean function returning `True` when a snake cuts itself'''
-    return snake[0] in snake[1:]
+    # Implement this!
+    pass
 
 
 def move_snake(snake, food, move):
@@ -15,15 +19,8 @@ def move_snake(snake, food, move):
     of points and a string wasd movement and modifies in place the snake and updates the food list
     accordingly.
     '''
-    new_head = next_point(snake[0], move)
-    if new_head is None:
-        return
-    snake.insert(0, new_head)
-    if new_head in food:
-        food.remove(new_head)
-    else:
-        snake.pop()
-
+    # Implement this!
+    pass
 
 
 def next_point(point, move):
@@ -31,17 +28,8 @@ def next_point(point, move):
     of that point based on that movement. Bare in mind that x increases left to right while
     y increases top to bottom. So, moving (1,4) right yields (2,4), while moving (1,4) down 
     yields (1,5).'''
-    x, y = point # We unpack those values for convenience.
-    if move == 'a':
-        return (x, (GRID_SIZE + y - 1) % GRID_SIZE)
-    if move == 'd':
-        return (x, (y + 1) % GRID_SIZE)
-    if move == 'w':
-        return ((GRID_SIZE + x - 1) % GRID_SIZE, y)
-    if move == 's':
-        return ((x + 1) % GRID_SIZE, y)
-    return None # Just for clarity: we do not handle any other input and, by default, python functions
-    # do return None.
+    # Well, implement this!
+    pass
 
 
 def update_food(food):
@@ -51,7 +39,8 @@ def update_food(food):
     Mathematical addendum: This approach does not pick new food points uniformly at
     random. To do so, we could implement reservoir sampling, or similar alternatives.
     Here, instead, we strive for simplicity.'''
-    if random() > P_ADD_FOOD: # At random, determined whether to add new food or not
+    # README: Do not modify this function!
+    if random() > P_ADD_FOOD: # At random, determine whether to add new food or not
         return
     food_point = (choice(range(GRID_SIZE)), choice(range(GRID_SIZE)))
     while food_point in food:
@@ -61,5 +50,21 @@ def update_food(food):
 
 def is_game_over(snake):
     '''Boolean function determining whether a game of Snake is over (True) or not (False)'''
-    return cuts_self(snake)
+    # This will be the easiest one, probably. Yet, implement this!
+    pass
+
+
+def init_game():
+    '''Game initialisation function'''
+    # Fill in the rest of the logic and make sure to populate all three 
+    # variables in the return statement, below.
+    return snake, food, current_move
+   
+
+def update_game(snake, food, current_move, scr):
+    '''Game update function, updating all related game entities. `scr` is just the game screen'''
+    # README: Do not change this function! Instead, you can use it as a guide.
+    draw_grid(GRID_SIZE, snake, food, scr)
+    move_snake(snake, food, current_move)
+    update_food(food)
 

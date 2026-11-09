@@ -8,6 +8,11 @@ FOOD_PT = '+'
 EMPTY_PT = ' '
 
 
+# Do not change this function, it just takes care of rendering things
+# onto the screen. The screen itself is the `scr` screen object, as used
+# by Python's curses library.
+# This function is used just by `update_game()`, so you should not normally
+# need to use it yourselves.
 def draw_grid(n, snake, food, scr):
     '''Draws a grid including the snake and related food instances'''
     print('\x1b[1;37;40m', end='')
