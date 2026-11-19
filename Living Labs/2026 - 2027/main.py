@@ -40,13 +40,17 @@ def make_move(player, move, grid_size):
     return player
 
 
-def print_grid(n, player):
+def print_grid(n, player, visited, printover=True):
     '''Prints game grid'''
+    if printover:
+        print('\x1b[H\x1b[2B')
     for i in range(n):
         for j in range(n):
             # Recall: rows grow on y, columns grow on x.
             if player == (j, i):
                 print('p', end=' ')
+            elif (j, i) in visited:
+                print('.', end=' ')
             else:
                 print('*', end=' ')
         print()
@@ -55,11 +59,13 @@ def print_grid(n, player):
 if __name__ == '__main__':
     grid_size = get_grid_size()
     player = (0, grid_size - 1)
-    print_grid(grid_size, player)
+    visited = { player }
+    print_grid(grid_size, player, visited, printover=False)
     move = get_next_move()
     while move != 'q':
         player = make_move(player, move, grid_size)
-        print_grid(grid_size, player)
+        visited.add(player)
+        print_grid(grid_size, player, visited)
         move = get_next_move()
     print('Game over!')
 
