@@ -1,6 +1,8 @@
 # main.py
 # Main entry point for our living game lab
 
+from random import randrange
+
 def get_grid_size():
     '''Asks user to provide grid size (s/m/l) and returns the 
     corresponding number of rows/columns as an integer.'''
@@ -13,6 +15,17 @@ def get_grid_size():
     if size == 'm':
         return 20
     return 30
+
+
+def generate_relics(n):
+    '''Generates a set of randomly chosen points, serving as relic locations.'''
+    relics = set()
+    while len(relics) < n:
+        x = randrange(n)
+        y = randrange(n)
+        # Since this is a set, this is not guaranteed to add a new element all the time.
+        relics.add((x, y))
+    return relics
 
 
 def get_next_move():
@@ -60,6 +73,7 @@ if __name__ == '__main__':
     grid_size = get_grid_size()
     player = (0, grid_size - 1)
     visited = { player }
+    relics = generate_relics(grid_size)
     print_grid(grid_size, player, visited, printover=False)
     move = get_next_move()
     while move != 'q':
