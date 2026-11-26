@@ -25,7 +25,10 @@ def draw_grid(n, snake, food, scr):
                 row += f'{FOOD_PT} '
             else:
                 row += f'{EMPTY_PT} '
-        scr.addstr(i, 0, row)
+        if scr is not None:
+            scr.addstr(i, 0, row)
+        else:
+            print(row)
     print(f'\x1b[{n}A\x1b[{n}D', end='')
 
 

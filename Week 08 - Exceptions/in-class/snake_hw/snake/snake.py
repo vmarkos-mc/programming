@@ -21,7 +21,12 @@ def move_snake(snake, food, move):
     accordingly.
     '''
     # Get the next head location
-    next_head = next_point(snake[-1], move)
+    new_head = next_point(snake[-1], move)
+    if new_head in food:
+        food.remove(new_head)
+    else:
+        snake.remove(snake[0])
+    snake.append(new_head)
 
 
 def next_point(point, move):
@@ -52,7 +57,7 @@ def update_food(food):
     food_point = (choice(range(GRID_SIZE)), choice(range(GRID_SIZE)))
     while food_point in food:
         food_point = (choice(range(GRID_SIZE)), choice(range(GRID_SIZE)))
-    food.append(food_point)
+    food.add(food_point)
 
 
 def is_game_over(snake):
