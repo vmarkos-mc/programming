@@ -1,6 +1,6 @@
 # snake.py
 
-from random import random, choice, choices
+from random import random, choice, sample
 from utils import draw_grid
 
 # You can change the following for testing or just to make the game more interesting.
@@ -62,14 +62,19 @@ def update_food(food):
 
 def is_game_over(snake):
     '''Boolean function determining whether a game of Snake is over (True) or not (False)'''
-    # This will be the easiest one, probably. Yet, implement this!
-    pass
+    return cuts_self(snake) or len(snake) == GRID_SIZE ** 2
 
 
 def init_game():
     '''Game initialisation function'''
-    # Fill in the rest of the logic and make sure to populate all three 
-    # variables in the return statement, below.
+    x_center, y_center = GRID_SIZE // 2, GRID_SIZE // 2
+    snake = [(x_center + i, y_center) for i in range(-2, 3)]
+    # Generate a set of all grid points
+    GRID_POINTS = {(x, y) for x in range(GRID_SIZE) for y in range(GRID_SIZE)}
+    # Remove snake grid points
+    GRID_POINTS.difference_update(snake)
+    food = set(sample(sorted(GRID_POINTS), k = N_FOOD))
+    current_move = 'd'
     return snake, food, current_move
    
 
