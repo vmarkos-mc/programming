@@ -53,7 +53,7 @@ def make_move(player, move, grid_size):
     return player
 
 
-def print_grid(n, player, visited, printover=True):
+def print_grid(n, player, visited, relics, printover=True):
     '''Prints game grid'''
     if printover:
         print('\x1b[H\x1b[2B')
@@ -63,7 +63,10 @@ def print_grid(n, player, visited, printover=True):
             if player == (j, i):
                 print('p', end=' ')
             elif (j, i) in visited:
-                print('.', end=' ')
+                if (j, i) in relics:
+                    print('+', end=' ')
+                else:
+                    print('.', end=' ')
             else:
                 print('*', end=' ')
         print()
@@ -74,12 +77,12 @@ if __name__ == '__main__':
     player = (0, grid_size - 1)
     visited = { player }
     relics = generate_relics(grid_size)
-    print_grid(grid_size, player, visited, printover=False)
+    print_grid(grid_size, player, visited, relics, printover=False)
     move = get_next_move()
     while move != 'q':
         player = make_move(player, move, grid_size)
         visited.add(player)
-        print_grid(grid_size, player, visited)
+        print_grid(grid_size, player, visited, relics)
         move = get_next_move()
     print('Game over!')
 
